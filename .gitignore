@@ -1,0 +1,42 @@
+# --- dependencies ---
+node_modules/
+
+# --- builds ---
+dist/
+frontend/.next/
+frontend/out/
+frontend/build/
+*.tsbuildinfo
+frontend/next-env.d.ts
+
+# --- environment ---
+.env
+.env.*
+!.env.example
+
+# --- logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.pem
+
+# --- deploy ---
+.vercel
+
+# --- impeccable design tooling ---
+# Keep design.json, surfaces/ and live/config.json (shared project state);
+# drop review captures, generated mocks, build scratch and machine-local config.
+**/.impeccable/review/
+**/.impeccable/mocks/
+**/.impeccable/build/
+**/.impeccable/config.local.json
+**/.impeccable/live/inject-journal.json

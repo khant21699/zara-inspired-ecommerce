@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Helvetica Neue", var(--font-sans-fallback), Helvetica, Arial, sans-serif;
+  --font-logo: var(--font-wordmark), "Bodoni 72", Didot, "Times New Roman", serif;
+
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-muted: #767676;
+  --color-line: #e5e5e5;
+  --color-sale: #e5007d;
+  --color-canvas: #f4f3f1;
+
+  --text-2xs: 11px;
+  --text-2xs--line-height: 16px;
+  --text-xs: 12px;
+  --text-xs--line-height: 18px;
+  --text-chrome: 13px;
+  --text-chrome--line-height: 22px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Element defaults live in the base layer so Tailwind's utilities can
+   override them (an unlayered `a { color: inherit }` beats `text-sale`). */
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  /* Floating chrome geometry. There is no header bar: menu, search, bag and
+     help float at the viewport edges and content starts at --chrome-top inside
+     a centred column of --page-col. Every page offset and sticky element reads
+     these so nothing collides with the chrome. */
+  :root {
+    --chrome-x: 16px;
+    --chrome-top: 104px;
+    --page-col: 100%;
+  }
+  @media (min-width: 48rem) {
+    :root {
+      --chrome-x: 32px;
+      --chrome-top: 160px;
+      --page-col: min(72vw, 1440px);
+    }
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: var(--text-2xs);
+    line-height: var(--text-2xs--line-height);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer components {
+  /* Header inverts over dark home slides (set by components/home/SnapScroll) */
+  html[data-header-theme="dark"] .site-header {
+    color: var(--color-paper);
+  }
+  html[data-header-theme="dark"] .site-header .border-ink {
+    border-color: var(--color-paper);
+  }
+  html[data-header-theme="dark"] .site-header .bg-ink {
+    background: var(--color-paper);
+  }
+  /* The open menu lays paper over everything, so the whole chrome reads in ink
+     whatever the slide underneath. */
+  .site-header[data-menu-open="true"] {
+    color: var(--color-ink) !important;
+  }
+  .site-header[data-menu-open="true"] .border-ink {
+    border-color: var(--color-ink) !important;
+  }
+  .site-header[data-menu-open="true"] .bg-ink {
+    background: var(--color-ink) !important;
+  }
+
+  /* Chrome words: hairline underline on hover, ink outline for keyboard focus. */
+  .site-header a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+  .site-header a:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 4px;
+  }
+  /* The menu button's hit area is oversized; ring the lines, not the target. */
+  .site-header button:focus-visible {
+    outline: none;
+  }
+  .site-header button:focus-visible > span {
+    outline: 1px solid currentColor;
+    outline-offset: 8px;
+  }
+  .site-header a.border-ink:hover {
+    text-decoration: none;
+    border-bottom-width: 2px;
+    padding-bottom: 4px;
+  }
+  .site-header .font-logo:hover {
+    text-decoration: none;
+  }
+
+  /* Zara-style hairline underline links */
+  .u-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 24px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    text-transform: uppercase;
+    font-size: var(--text-2xs);
+    transition: opacity 0.2s ease;
+  }
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 24px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border: 1px solid var(--color-ink);
+    text-transform: uppercase;
+    font-size: var(--text-2xs);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .btn-secondary:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  /* Reference PDP buttons: 40px, hairline outline, paper ground. */
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 16px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border: 0.5px solid var(--color-ink);
+    text-transform: uppercase;
+    font-size: var(--text-chrome);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .btn-outline:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .input-line {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--color-ink);
+    border-radius: 0;
+    background: transparent;
+    padding: 10px 0;
+    outline: none;
+  }
+  .input-line::placeholder {
+    color: var(--color-muted);
+    text-transform: uppercase;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Cheap film-grain overlay for editorial backdrops */
+@utility grain {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.14;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@utility animate-fade-up {
+  animation: fade-up 0.45s var(--ease-out-expo) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

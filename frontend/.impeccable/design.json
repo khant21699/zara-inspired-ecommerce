@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-15T20:07:14.548Z",
+  "title": "Design System: Zara-inspired storefront",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "#000000",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(62% 0 0)",
+          "oklch(74% 0 0)",
+          "oklch(86% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "special-prices-pink": {
+        "role": "secondary",
+        "displayName": "Special-Prices Pink",
+        "canonical": "#e5007d",
+        "tonalRamp": [
+          "oklch(15% 0.08 355)",
+          "oklch(27% 0.14 355)",
+          "oklch(38% 0.19 355)",
+          "oklch(50% 0.23 355)",
+          "oklch(62% 0.25 355)",
+          "oklch(74% 0.18 355)",
+          "oklch(86% 0.1 355)",
+          "oklch(95% 0.04 355)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(62% 0 0)",
+          "oklch(74% 0 0)",
+          "oklch(86% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "caption-grey": {
+        "role": "neutral",
+        "displayName": "Caption Grey",
+        "canonical": "#767676",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(62% 0 0)",
+          "oklch(74% 0 0)",
+          "oklch(86% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "hairline-grey": {
+        "role": "neutral",
+        "displayName": "Hairline Grey",
+        "canonical": "#e5e5e5",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(62% 0 0)",
+          "oklch(74% 0 0)",
+          "oklch(86% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "studio-canvas": {
+        "role": "neutral",
+        "displayName": "Studio Canvas",
+        "canonical": "#f4f3f1",
+        "tonalRamp": [
+          "oklch(15% 0.004 85)",
+          "oklch(27% 0.004 85)",
+          "oklch(38% 0.004 85)",
+          "oklch(50% 0.004 85)",
+          "oklch(62% 0.004 85)",
+          "oklch(74% 0.004 85)",
+          "oklch(86% 0.004 85)",
+          "oklch(95% 0.004 85)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "The ZARA wordmark, fixed on the home cover at the right edge and vertically centred at 58%; reused at 92px / 0.9 in the open menu. Bodoni Moda is a licensed-logo stand-in."
+      },
+      "menu-section": {
+        "displayName": "Menu section",
+        "purpose": "WOMAN / MAN / KIDS / PRE-OWNED in the open menu, on 36px rows with a 4px ink dot marking the active one."
+      },
+      "product-name": {
+        "displayName": "Product name",
+        "purpose": "The product-page title; the only 15px in the system."
+      },
+      "chrome": {
+        "displayName": "Chrome",
+        "purpose": "Floating instruments (SEARCH, BAG, LOG IN, HELP, FILTERS, VIEW, CLOSE), home block labels, product-page price and buttons, size rows, menu category links."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions, panel bodies, cookie and help copy, the floating composition on the product page."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "The body default: card name and price, COLOUR | REF, menu numerals and secondary links, panel titles, rail captions, toast and filter copy."
+      }
+    },
+    "shadows": [
+      {
+        "name": "none",
+        "value": "none",
+        "purpose": "Interface surfaces never carry a shadow; overlays are paper with a 1px ink border or a translucent paper scrim. The only drop-shadow in the build (0 30px 40px rgba(0,0,0,0.12)) sits under placeholder garment silhouettes on the home cover and is not a system token."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hamburger-to-X (500ms), filters drawer slide (500ms), fade-up entry (450ms), and the JS scroll tween on the home arrow (700ms)."
+      },
+      {
+        "name": "ease-state",
+        "value": "ease 200ms",
+        "purpose": "Button opacity and background/colour inversion on hover."
+      },
+      {
+        "name": "fade-chrome",
+        "value": "300ms",
+        "purpose": "Chrome colour inversion over dark blocks and the menu sheet's opacity."
+      },
+      {
+        "name": "hover-swap",
+        "value": "opacity 500ms",
+        "purpose": "Product card cross-fade to the detail crop."
+      },
+      {
+        "name": "fade-up",
+        "value": "opacity 0→1, translateY(8px→0), 450ms ease-out-expo",
+        "purpose": "Entry of the cookie box, bag toast, quick-add sheet and product-page size list."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "All animations and transitions collapse under prefers-reduced-motion; the arrow tween jumps instead."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "48rem"
+      }
+    ],
+    "chromeGeometry": {
+      "--chrome-x": {
+        "phone": "16px",
+        "md": "32px"
+      },
+      "--chrome-top": {
+        "phone": "104px",
+        "md": "160px"
+      },
+      "--page-col": {
+        "phone": "100%",
+        "md": "min(72vw, 1440px)"
+      },
+      "listingColumns": {
+        "hero": "74.23%",
+        "pair": "47.84%",
+        "pairGutter": "4.32%",
+        "six": "calc((100% - 5 * 3.086%) / 6)",
+        "sixGutter": "3.086%",
+        "rowGap": {
+          "view1and2": "112px",
+          "view3": "16px"
+        }
+      },
+      "productPage": {
+        "shotA": {
+          "left": "12.9%",
+          "width": "43%"
+        },
+        "shotB": {
+          "left": "51.6%",
+          "width": "35.2%"
+        },
+        "shotGap": "112px",
+        "buyColumn": {
+          "left": "62%",
+          "width": "24.2%",
+          "top": "133px"
+        },
+        "buttonGap": "18px"
+      },
+      "menu": {
+        "sections": "22%",
+        "groups": "31.3%",
+        "groupLabel": "45%",
+        "railTile": "174px",
+        "railGap": "7px",
+        "headOffset": "86px"
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink fill, 44px, 11px uppercase light. Consent accept, filters results, bag and checkout flows.",
+      "html": "<button class=\"ds-btn-primary\">Accept all cookies</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 24px; background: var(--color-ink, #000); color: var(--color-paper, #fff); border: 0; border-radius: 0; font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 11px; line-height: 16px; cursor: pointer; transition: opacity 0.2s ease; } .ds-btn-primary:hover { opacity: 0.85; } .ds-btn-primary:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; } .ds-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Paper with a 1px ink border, 44px; inverts to ink on hover. Consent reject, filters clear.",
+      "html": "<button class=\"ds-btn-secondary\">Reject all cookies</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 24px; background: var(--color-paper, #fff); color: var(--color-ink, #000); border: 1px solid var(--color-ink, #000); border-radius: 0; font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 11px; line-height: 16px; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; } .ds-btn-secondary:hover { background: var(--color-ink, #000); color: var(--color-paper, #fff); } .ds-btn-secondary:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }"
+    },
+    {
+      "name": "Outline Button (ADD / PAY)",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The product page's 40px hairline-outlined pair at 13px; never a filled block.",
+      "html": "<div class=\"ds-btn-outline-row\"><button class=\"ds-btn-outline\">Add</button><button class=\"ds-btn-outline\">Pay</button></div>",
+      "css": ".ds-btn-outline-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 436px; max-width: 100%; } .ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; background: var(--color-paper, #fff); color: var(--color-ink, #000); border: 0.5px solid var(--color-ink, #000); border-radius: 0; font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 22px; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; } .ds-btn-outline:hover { background: var(--color-ink, #000); color: var(--color-paper, #fff); } .ds-btn-outline:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }"
+    },
+    {
+      "name": "Line Input",
+      "kind": "input",
+      "refersTo": "input-line",
+      "description": "Borderless field with a 1px ink bottom rule and an uppercase caption-grey placeholder.",
+      "html": "<input class=\"ds-input-line\" type=\"text\" placeholder=\"What are you looking for?\" />",
+      "css": ".ds-input-line { width: 100%; max-width: 420px; border: 0; border-bottom: 1px solid var(--color-ink, #000); border-radius: 0; background: transparent; padding: 10px 0; outline: none; color: var(--color-ink, #000); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; font-size: 11px; line-height: 16px; } .ds-input-line::placeholder { color: var(--color-muted, #767676); text-transform: uppercase; } .ds-input-line:focus-visible { border-bottom-width: 2px; padding-bottom: 9px; }"
+    },
+    {
+      "name": "Floating Chrome",
+      "kind": "nav",
+      "refersTo": "chrome-word",
+      "description": "The four instruments: two-line hamburger top-left, SEARCH with its 170px underline top-right, BAG |n| / LOG IN / HELP stacked at the right edge in 32px rows.",
+      "html": "<div class=\"ds-chrome\"><button class=\"ds-chrome-menu\" aria-label=\"Open menu\"><span class=\"ds-chrome-lines\"><span></span><span></span></span></button><a class=\"ds-chrome-search\" href=\"#\">Search</a><nav class=\"ds-chrome-stack\"><a href=\"#\">Bag <span class=\"ds-chrome-count\">0</span></a><a href=\"#\">Log in</a><a href=\"#\">Help</a></nav></div>",
+      "css": ".ds-chrome { position: relative; height: 260px; width: 100%; background: var(--color-paper, #fff); color: var(--color-ink, #000); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 22px; } .ds-chrome a { color: inherit; text-decoration: none; } .ds-chrome-menu { position: absolute; left: 32px; top: 32px; width: 64px; height: 16px; padding: 0; border: 0; background: none; cursor: pointer; } .ds-chrome-lines { position: relative; display: block; width: 64px; height: 16px; } .ds-chrome-lines span { position: absolute; left: 0; right: 0; height: 1px; background: currentColor; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); } .ds-chrome-lines span:first-child { top: 0; } .ds-chrome-lines span:last-child { bottom: 0; } .ds-chrome-menu:hover span:first-child { transform: translateY(7.5px) rotate(45deg); } .ds-chrome-menu:hover span:last-child { transform: translateY(-7.5px) rotate(-45deg); } .ds-chrome-menu:focus-visible { outline: none; } .ds-chrome-menu:focus-visible .ds-chrome-lines { outline: 1px solid currentColor; outline-offset: 8px; } .ds-chrome-search { position: absolute; right: 32px; top: 28px; width: 170px; padding-bottom: 5px; border-bottom: 1px solid currentColor; text-align: right; } .ds-chrome-search:hover { border-bottom-width: 2px; padding-bottom: 4px; } .ds-chrome-stack { position: absolute; right: 32px; top: 160px; display: flex; flex-direction: column; align-items: flex-end; } .ds-chrome-stack a { display: flex; align-items: center; gap: 8px; height: 32px; padding: 5px 0; } .ds-chrome-stack a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; } .ds-chrome a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; } .ds-chrome-count { display: flex; align-items: center; justify-content: center; height: 18px; min-width: 20px; padding: 0 4px; border-left: 1px solid currentColor; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; font-size: 12px; line-height: 1; letter-spacing: -0.5px; }"
+    },
+    {
+      "name": "Price with Sale Chip",
+      "kind": "chip",
+      "refersTo": "chip-sale",
+      "description": "Struck original in ink, then percentage and current price together on a black chip. 11px on cards, 13px on the product page.",
+      "html": "<p class=\"ds-price\"><s>$ 69.90</s><span class=\"ds-price-chip\">-29%  $ 49.90</span></p>",
+      "css": ".ds-price { display: flex; align-items: center; gap: 4px; white-space: nowrap; margin: 0; color: var(--color-ink, #000); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; font-size: 11px; line-height: 16px; } .ds-price-chip { white-space: pre; background: var(--color-ink, #000); color: var(--color-paper, #fff); padding: 0 4px; border-radius: 0; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "chip-sale",
+      "description": "A 2:3 slot on studio canvas, then 16px below: name, price line, 10px colour squares, and a hairline + at the right for quick add.",
+      "html": "<article class=\"ds-card\"><a class=\"ds-card-image\" href=\"#\" aria-label=\"Linen blend mini dress\"></a><div class=\"ds-card-info\"><div class=\"ds-card-text\"><a class=\"ds-card-name\" href=\"#\">Linen blend mini dress</a><p class=\"ds-card-price\"><s>$ 69.90</s><span class=\"ds-card-chip\">-29%  $ 49.90</span></p><ul class=\"ds-card-colours\" aria-label=\"2 colours\"><li style=\"background:#d8c8b8\"></li><li style=\"background:#6b7350\"></li></ul></div><button class=\"ds-card-add\" aria-label=\"Add to bag\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg></button></div></article>",
+      "css": ".ds-card { width: 240px; color: var(--color-ink, #000); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 11px; line-height: 16px; } .ds-card-image { display: block; aspect-ratio: 2 / 3; background: var(--color-canvas, #f4f3f1); transition: opacity 0.5s; } .ds-card-image:hover { opacity: 0.9; } .ds-card-info { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding-top: 16px; } .ds-card-text { min-width: 0; } .ds-card-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: inherit; text-decoration: none; } .ds-card-name:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; } .ds-card-price { display: flex; align-items: center; gap: 4px; margin: 0; white-space: nowrap; } .ds-card-chip { white-space: pre; background: var(--color-ink, #000); color: var(--color-paper, #fff); padding: 0 4px; } .ds-card-colours { display: flex; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; } .ds-card-colours li { width: 10px; height: 10px; border: 1px solid rgba(0,0,0,0.1); } .ds-card-add { flex-shrink: 0; margin-right: -4px; padding: 4px; border: 0; background: none; color: inherit; cursor: pointer; } .ds-card-add svg { width: 12px; height: 12px; display: block; } .ds-card-add:hover { opacity: 0.4; } .ds-card-add:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }"
+    },
+    {
+      "name": "Size List (product page)",
+      "kind": "custom",
+      "refersTo": "size-option",
+      "description": "The list that fades up beneath ADD: 40px rows on hairline-grey dividers, 13px uppercase, canvas fill on hover; choosing a size adds to bag and closes it.",
+      "html": "<ul class=\"ds-sizes\" aria-label=\"Select a size\"><li><button>XS</button></li><li><button>S</button></li><li><button>M</button></li><li><button>L</button></li></ul>",
+      "css": ".ds-sizes { width: 436px; max-width: 100%; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--color-line, #e5e5e5); animation: ds-fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-sizes li { border-bottom: 1px solid var(--color-line, #e5e5e5); } .ds-sizes button { display: flex; align-items: center; width: 100%; height: 40px; padding: 0; border: 0; background: none; color: var(--color-ink, #000); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 22px; cursor: pointer; text-align: left; } .ds-sizes button:hover { background: var(--color-canvas, #f4f3f1); } .ds-sizes button:focus-visible { outline: 1px solid currentColor; outline-offset: -1px; } @keyframes ds-fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }"
+    },
+    {
+      "name": "Menu Sections",
+      "kind": "nav",
+      "refersTo": "chrome-word",
+      "description": "The open menu's serif section list on 36px rows with a 4px ink dot on the active one, the numbered groups beside it with SPECIAL PRICES in pink, and the muted secondary links beneath.",
+      "html": "<div class=\"ds-menu\"><nav class=\"ds-menu-sections\"><ul><li><button>Woman</button></li><li class=\"is-active\"><button>Man</button></li><li><button>Kids</button></li><li><a href=\"#\">Pre-owned</a></li></ul><ul class=\"ds-menu-secondary\"><li><a href=\"#\">Gift card</a></li><li><a href=\"#\">Store locator</a></li><li><a href=\"#\">Join life</a></li></ul></nav><nav class=\"ds-menu-groups\"><div><p><span class=\"ds-menu-num\">|01|</span><span>New in</span></p><ul><li><a href=\"#\">New in</a></li></ul></div><div><p><span class=\"ds-menu-num\">|02|</span></p><ul><li><a class=\"is-sale\" href=\"#\">Special prices</a></li></ul></div><div><p><span class=\"ds-menu-num\">|04|</span><span>Collection</span></p><ul><li><a href=\"#\">Jackets</a></li><li><a href=\"#\">Coats</a></li><li><a href=\"#\">Blazers</a></li></ul></div></nav></div>",
+      "css": ".ds-menu { display: flex; gap: 48px; padding: 24px 32px; background: var(--color-paper, #fff); color: var(--color-ink, #000); } .ds-menu ul { list-style: none; margin: 0; padding: 0; } .ds-menu a { color: inherit; text-decoration: none; } .ds-menu-sections > ul:first-child { font-family: var(--font-logo, \"Bodoni Moda\", \"Bodoni 72\", Didot, \"Times New Roman\", serif); font-size: 27px; line-height: 36px; letter-spacing: -0.02em; text-transform: uppercase; } .ds-menu-sections li { position: relative; } .ds-menu-sections li.is-active::before { content: \"\"; position: absolute; left: -20px; top: 15px; width: 4px; height: 4px; border-radius: 9999px; background: currentColor; } .ds-menu-sections button { padding: 0; border: 0; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; } .ds-menu-sections button:hover, .ds-menu-sections > ul:first-child a:hover { text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 1px; } .ds-menu-sections button:focus-visible, .ds-menu a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; } .ds-menu-secondary { margin-top: 40px !important; display: grid; gap: 8px; color: var(--color-muted, #767676); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 11px; line-height: 16px; } .ds-menu-secondary a:hover { color: var(--color-ink, #000); } .ds-menu-groups > div { display: flex; align-items: flex-start; margin-bottom: 24px; } .ds-menu-groups p { width: 120px; flex-shrink: 0; margin: 0; font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 11px; line-height: 36px; } .ds-menu-num { color: var(--color-muted, #767676); margin-right: 8px; } .ds-menu-groups li { font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 36px; } .ds-menu-groups a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; } .ds-menu-groups a.is-sale { color: var(--color-sale, #e5007d); }"
+    },
+    {
+      "name": "Home Block Label and Arrow",
+      "kind": "custom",
+      "refersTo": "chrome-word",
+      "description": "A full-viewport block carrying one 13px uppercase link at the bottom-left, and the 1.2px arrow fixed bottom-right that advances one block; both invert to paper over dark blocks.",
+      "html": "<section class=\"ds-block ds-block-dark\"><h2 class=\"ds-block-label\"><a href=\"#\">Man</a></h2><button class=\"ds-block-arrow\" aria-label=\"Next\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></button></section>",
+      "css": ".ds-block { position: relative; width: 100%; height: 260px; overflow: hidden; color: var(--color-ink, #000); background: linear-gradient(180deg, #e6e1d8 0%, #c9c1b4 100%); } .ds-block-dark { color: var(--color-paper, #fff); background: linear-gradient(180deg, #5a5852 0%, #2d2c29 100%); } .ds-block-label { position: absolute; left: 32px; bottom: 32px; margin: 0; font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 22px; } .ds-block-label a { color: inherit; text-decoration: none; } .ds-block-label a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; } .ds-block-arrow { position: absolute; right: 32px; bottom: 28px; padding: 4px; border: 0; background: none; color: inherit; cursor: pointer; transition: color 0.3s; } .ds-block-arrow svg { display: block; width: 20px; height: 20px; } .ds-block-arrow:hover { opacity: 0.6; } .ds-block-arrow:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Instruments at the Edges",
+    "overview": "There is no header bar. The page is a white sheet; four instruments float at its corners (menu top-left, search top-right, bag / log in / help stacked at the right edge, filters at the left edge on listings, the view switch bottom-left) and content runs underneath them in a centred column. Everything the interface says, it says in one light uppercase sans at 11, 12 or 13px; the only display voice is the Didone wordmark, and it appears exactly twice: oversized and fixed on the home cover, and at the head of the open menu. This is a faithful recreation of the live zara.com `layout-ss26` grammar measured at 1800px on 2026-09-16, so convention is the commitment and the reference's craft is the bar.\n\nDensity is editorial rather than catalogue: 2:3 imagery in a hero-then-pair rhythm with wide white gutters, product info as three short lines beneath each picture, a product page where the photograph owns the page and the buy column is a narrow annotation beside it. The build refuses the category defaults it replaced: the full-width header with a centred logo, the sticky listing toolbar with breadcrumb and count, the boxed buy panel with a filled CTA and chevron accordions, the 440px drawer menu, and hero slides carrying an eyebrow, a display title and a button.\n\nDepth is flat. Ink on paper, one hairline (1px; 0.5px on the product page's outlined buttons), no radius anywhere, no shadows on interface surfaces. State is expressed by underline, by inversion (ink fills paper on hover), by opacity, and by the chrome turning to paper over dark home blocks.",
+    "keyCharacteristics": [
+      "Floating chrome, never a bar: every instrument reads `--chrome-x` / `--chrome-top` and content starts below them in a `--page-col` column.",
+      "One sans, one weight: Helvetica Neue Light 300 (Inter 300 self-hosted fallback) in uppercase at 13px chrome, 12px running copy, 11px product info.",
+      "Controls are words; the two-line hamburger, the bracketed bag count, the `+` quick add and the bookmark are the enumerated glyph exceptions.",
+      "Flat ink on paper: no radius, no interface shadows, hairlines only.",
+      "Reduced prices as a black chip with white text; pink is reserved for the menu's SPECIAL PRICES link.",
+      "2:3 imagery everywhere, on a warm studio canvas until real photography lands."
+    ],
+    "rules": [
+      {
+        "name": "The Black Chip Rule",
+        "body": "A reduced price is the original struck through in ink followed by `-NN%  $ price` set white on an ink chip. No red, no pink on listings or product pages.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Pink Rule",
+        "body": "`{colors.special-prices-pink}` colours exactly one string, the menu's SPECIAL PRICES link. Any other pink is a defect.",
+        "section": "colors"
+      },
+      {
+        "name": "The Inversion Rule",
+        "body": "Over a `data-slide=\"dark\"` home block the chrome and the arrow switch to paper in full; the open menu lays paper over everything and forces the chrome back to ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Sizes Rule",
+        "body": "Interface text is 13px, 12px or 11px. Larger sizes exist only for the wordmark, the menu sections and the 15px product name; a display headline on a shopping surface is a defect.",
+        "section": "typography"
+      },
+      {
+        "name": "The Light Weight Rule",
+        "body": "The sans is set at 300 everywhere; the active view number is the only permitted step up (to 400). The wordmark alone uses 500.",
+        "section": "typography"
+      },
+      {
+        "name": "The Uppercase Rule",
+        "body": "Controls, labels, names and prices are uppercase; only descriptions, panel bodies and policy copy run in mixed case.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Lift Rule",
+        "body": "Surfaces never float on shadows. Overlays are paper sheets; separation is a hairline or a scrim.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** position every fixed instrument from `--chrome-x` and `--chrome-top`, and start every page at `pt: var(--chrome-top)` inside `w: var(--page-col)`; nothing may collide with the chrome.",
+      "**Do** set interface text in the sans at weight 300, uppercase, at 13px (chrome), 12px (copy) or 11px (product info and labels).",
+      "**Do** show reduced prices as the struck original followed by the black chip with `-NN%  $ price` in paper.",
+      "**Do** keep every image slot 2:3 on studio canvas (`{colors.studio-canvas}`).",
+      "**Do** express state by underline (1px, 4px offset), inversion (ink on paper), or opacity (40% / 85%), with 200–500ms transitions on `--ease-out-expo` or plain ease.",
+      "**Do** keep controls as words; when a glyph is required use the 1.2px stroke set at 12–24px.",
+      "**Do** make product-page actions outlined (`.btn-outline`: 0.5px, 40px) and reserve the filled primary for consent, filters and bag/checkout flows."
+    ],
+    "donts": [
+      "**Don't** add a header bar, a centred logo on inner pages, breadcrumbs, listing titles or item counts; the reference has none.",
+      "**Don't** use any radius, shadow or gradient on interface surfaces; the only shadow in the build belongs to placeholder art.",
+      "**Don't** use red or pink for prices or anywhere outside the menu's SPECIAL PRICES link.",
+      "**Don't** set the sans above 15px or below 300 weight on shopping surfaces; the wordmark and the menu sections are the only large type.",
+      "**Don't** put kickers, eyebrows or display titles on home blocks; each block carries one 13px label and nothing else.",
+      "**Don't** replace the product page's text-link panels with chevron accordions or a boxed buy panel."
+    ]
+  }
+}
