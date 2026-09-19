@@ -75,8 +75,12 @@
   }
 }
 
-@layer components {
-  /* Header inverts over dark home slides (set by components/home/SnapScroll) */
+/* Home chrome inversion (components/home/Deck sets the three attributes, one
+   per band: the chrome at the top, the wordmark at 58%, the arrow at the
+   bottom, so each instrument flips when the card under *it* changes). These
+   live in the utilities layer so they outrank the border-ink / bg-ink
+   utilities on the same elements. */
+@layer utilities {
   html[data-header-theme="dark"] .site-header {
     color: var(--color-paper);
   }
@@ -86,9 +90,19 @@
   html[data-header-theme="dark"] .site-header .bg-ink {
     background: var(--color-paper);
   }
+  html[data-mark-theme="light"] .site-header .font-logo {
+    color: var(--color-ink);
+  }
+  html[data-mark-theme="dark"] .site-header .font-logo {
+    color: var(--color-paper);
+  }
+  html[data-arrow-theme="dark"] .home-arrow {
+    color: var(--color-paper);
+  }
   /* The open menu lays paper over everything, so the whole chrome reads in ink
-     whatever the slide underneath. */
-  .site-header[data-menu-open="true"] {
+     whatever the card underneath. */
+  .site-header[data-menu-open="true"],
+  .site-header[data-menu-open="true"] .font-logo {
     color: var(--color-ink) !important;
   }
   .site-header[data-menu-open="true"] .border-ink {
@@ -96,6 +110,40 @@
   }
   .site-header[data-menu-open="true"] .bg-ink {
     background: var(--color-ink) !important;
+  }
+}
+
+@layer components {
+
+  /* Home deck (components/home/Deck sets --covered, 0..1, on each card as
+     the next slides over it): the covered photograph lifts and dims, its
+     title going first. Once the closing paper card holds the viewport, the
+     wordmark and the arrow step aside. */
+  .deck-card {
+    --covered: 0;
+  }
+  .deck-photo {
+    transform: translate3d(0, calc(var(--covered) * -15%), 0);
+    will-change: transform;
+  }
+  .deck-dim {
+    opacity: calc(var(--covered) * 0.5);
+  }
+  .deck-title {
+    opacity: clamp(0, 1 - var(--covered) * 2, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .deck-photo {
+      transform: none;
+    }
+  }
+  .site-header .font-logo {
+    transition: opacity 0.3s ease;
+  }
+  html[data-home-deck="end"] .site-header .font-logo,
+  html[data-home-deck="end"] .home-arrow {
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* Chrome words: hairline underline on hover, ink outline for keyboard focus. */

@@ -153,6 +153,35 @@ export async function fetchFirstProduct(section: SectionSlug, category: string):
   return first ? toProduct(first) : null;
 }
 
+/* ---- home rail ---- */
+
+/**
+ * The newest products across the three sections, interleaved (woman, man,
+ * kids, woman, ...) for the home's NEW IN rail. Resilient: an unreachable API
+ * gives an empty rail rather than a broken home.
+ */
+export async function fetchNewIn(sections: SectionSlug[], perSection: number): Promise<Product[]> {
+  const columns = await Promise.all(
+    sections.map(async (section) => {
+      try {
+        const res = await apiFetch<ListResponse>(
+          "/products",
+          { section, category: "new-in", sort: "newest", limit: perSection },
+          { next: { revalidate: REVALIDATE } },
+        );
+        return res.items.map(toProduct);
+      } catch {
+        return [];
+      }
+    }),
+  );
+  const rail: Product[] = [];
+  for (let i = 0; i < perSection; i += 1) {
+    for (const column of columns) if (column[i]) rail.push(column[i]);
+  }
+  return rail;
+}
+
 /* ---- menu rail ---- */
 
 export interface RailSlot {

@@ -34,7 +34,11 @@ export function BlockImage({ src, priority, className }: Props) {
       sizes="100vw"
       priority={priority}
       onLoad={() => setLoaded(true)}
-      className={cn("object-cover object-[35%_50%]", loaded ? "opacity-100" : "opacity-0", className)}
+      className={cn(
+        "object-cover object-[35%_50%]",
+        loaded ? "opacity-100" : "opacity-0",
+        className,
+      )}
     />
   );
 }

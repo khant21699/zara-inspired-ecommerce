@@ -16,9 +16,9 @@ export function CookieBanner() {
       className={cn(
         // Consent paints above the chrome. Phone: a box at the bottom, over
         // whatever is there until answered. Desktop: bottom-left, above the
-        // listing's VIEW switch and the home block label, away from the wordmark.
+        // listing's VIEW switch and the home deck's titles, away from the wordmark.
         "fixed inset-x-4 bottom-4 z-[65] max-w-md animate-fade-up border border-ink bg-paper p-5",
-        "md:inset-x-auto md:bottom-[104px] md:left-(--chrome-x) md:p-6",
+        "md:inset-x-auto md:bottom-(--chrome-top) md:left-(--chrome-x) md:p-6",
       )}
     >
       <h2 className="text-2xs uppercase">Cookie settings</h2>

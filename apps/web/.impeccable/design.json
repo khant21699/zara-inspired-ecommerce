@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-15T20:07:14.548Z",
+  "generatedAt": "2026-09-19T15:57:00.207Z",
   "title": "Design System: Zara-inspired storefront",
   "extensions": {
     "colorMeta": {
@@ -98,11 +98,15 @@
     "typographyMeta": {
       "wordmark": {
         "displayName": "Wordmark",
-        "purpose": "The ZARA wordmark, fixed on the home cover at the right edge and vertically centred at 58%; reused at 92px / 0.9 in the open menu. Bodoni Moda is a licensed-logo stand-in."
+        "purpose": "The ZARA wordmark, fixed on the home at the right edge and vertically centred at 58% over the whole deck, fading once the NEW IN card holds the viewport; reused at 92px / 0.9 in the open menu. Bodoni Moda is a licensed-logo stand-in."
       },
       "menu-section": {
         "displayName": "Menu section",
         "purpose": "WOMAN / MAN / KIDS / PRE-OWNED in the open menu, on 36px rows with a 4px ink dot marking the active one."
+      },
+      "home-card-title": {
+        "displayName": "Home card title",
+        "purpose": "WOMAN / MAN / KIDS / SALE / PERFUMES once per home deck card at (--chrome-x, bottom-24/32); paper on dark cards, ink on light; hairline underline on hover and focus; fades over the first half of the card's coverage."
       },
       "product-name": {
         "displayName": "Product name",
@@ -110,7 +114,7 @@
       },
       "chrome": {
         "displayName": "Chrome",
-        "purpose": "Floating instruments (SEARCH, BAG, LOG IN, HELP, FILTERS, VIEW, CLOSE), home block labels, product-page price and buttons, size rows, menu category links."
+        "purpose": "Floating instruments (SEARCH, BAG, LOG IN, HELP, FILTERS, VIEW, CLOSE), the NEW IN head row on the home, product-page price and buttons, size rows, menu category links."
       },
       "body": {
         "displayName": "Body",
@@ -125,14 +129,19 @@
       {
         "name": "none",
         "value": "none",
-        "purpose": "Interface surfaces never carry a shadow; overlays are paper with a 1px ink border or a translucent paper scrim. The only drop-shadow in the build (0 30px 40px rgba(0,0,0,0.12)) sits under placeholder garment silhouettes on the home cover and is not a system token."
+        "purpose": "Interface surfaces never carry a shadow; overlays are paper with a 1px ink border or a translucent paper scrim. The build carries no shadow at all; the home deck's depth is a scroll-bound 15% lift and 50% ink veil on the covered card."
       }
     ],
     "motion": [
       {
         "name": "ease-out-expo",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Hamburger-to-X (500ms), filters drawer slide (500ms), fade-up entry (450ms), and the JS scroll tween on the home arrow (700ms)."
+        "purpose": "Hamburger-to-X (500ms), filters drawer slide (500ms), fade-up entry (450ms), the home card photograph settling to 1.03 on hover (1200ms), and the JS scroll tween on the home arrow (700ms)."
+      },
+      {
+        "name": "deck-coverage",
+        "value": "--covered 0..1 per card, scroll-bound, no easing: photo translate3d(0, calc(var(--covered) * -15%), 0); dim opacity calc(var(--covered) * 0.5); title opacity clamp(0, 1 - var(--covered) * 2, 1)",
+        "purpose": "How a home card recedes as the next slides over it; written by components/home/Deck each frame, read by the .deck-* rules in globals.css."
       },
       {
         "name": "ease-state",
@@ -142,7 +151,7 @@
       {
         "name": "fade-chrome",
         "value": "300ms",
-        "purpose": "Chrome colour inversion over dark blocks and the menu sheet's opacity."
+        "purpose": "Chrome, wordmark and arrow colour inversion over dark home cards (per band), the wordmark and arrow fading at deck end, the rail controls fading at their ends, and the menu sheet's opacity."
       },
       {
         "name": "hover-swap",
@@ -157,7 +166,7 @@
       {
         "name": "reduced-motion",
         "value": "0.01ms",
-        "purpose": "All animations and transitions collapse under prefers-reduced-motion; the arrow tween jumps instead."
+        "purpose": "All animations and transitions collapse under prefers-reduced-motion; the arrow tween jumps instead; the deck drops the 15% lift and keeps the dim."
       }
     ],
     "breakpoints": [
@@ -214,6 +223,39 @@
         "railTile": "174px",
         "railGap": "7px",
         "headOffset": "86px"
+      },
+      "homeDeck": {
+        "card": "sticky top-0 h-svh",
+        "titleOffset": {
+          "x": "var(--chrome-x)",
+          "bottomPhone": "24px",
+          "bottomMd": "32px"
+        },
+        "arrow": {
+          "right": "var(--chrome-x)",
+          "bottomPhone": "20px",
+          "bottomMd": "28px"
+        },
+        "cookieDesktop": {
+          "left": "var(--chrome-x)",
+          "bottom": "var(--chrome-top)"
+        },
+        "bands": {
+          "header": "0.10",
+          "mark": "0.58",
+          "arrow": "0.97",
+          "end": "0.50"
+        },
+        "newInRail": {
+          "tilePhone": "calc((100% - 8px) / 2.2)",
+          "gapPhone": "8px",
+          "tileMd": "calc((100% - 4 * 24px) / 4.5)",
+          "gapMd": "24px",
+          "headGap": {
+            "phone": "24px",
+            "md": "40px"
+          }
+        }
       }
     }
   },
@@ -291,24 +333,32 @@
       "css": ".ds-menu { display: flex; gap: 48px; padding: 24px 32px; background: var(--color-paper, #fff); color: var(--color-ink, #000); } .ds-menu ul { list-style: none; margin: 0; padding: 0; } .ds-menu a { color: inherit; text-decoration: none; } .ds-menu-sections > ul:first-child { font-family: var(--font-logo, \"Bodoni Moda\", \"Bodoni 72\", Didot, \"Times New Roman\", serif); font-size: 27px; line-height: 36px; letter-spacing: -0.02em; text-transform: uppercase; } .ds-menu-sections li { position: relative; } .ds-menu-sections li.is-active::before { content: \"\"; position: absolute; left: -20px; top: 15px; width: 4px; height: 4px; border-radius: 9999px; background: currentColor; } .ds-menu-sections button { padding: 0; border: 0; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; } .ds-menu-sections button:hover, .ds-menu-sections > ul:first-child a:hover { text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 1px; } .ds-menu-sections button:focus-visible, .ds-menu a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; } .ds-menu-secondary { margin-top: 40px !important; display: grid; gap: 8px; color: var(--color-muted, #767676); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 11px; line-height: 16px; } .ds-menu-secondary a:hover { color: var(--color-ink, #000); } .ds-menu-groups > div { display: flex; align-items: flex-start; margin-bottom: 24px; } .ds-menu-groups p { width: 120px; flex-shrink: 0; margin: 0; font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 11px; line-height: 36px; } .ds-menu-num { color: var(--color-muted, #767676); margin-right: 8px; } .ds-menu-groups li { font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 36px; } .ds-menu-groups a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; } .ds-menu-groups a.is-sale { color: var(--color-sale, #e5007d); }"
     },
     {
-      "name": "Home Block Label and Arrow",
+      "name": "Home Deck Card",
       "kind": "custom",
       "refersTo": "chrome-word",
-      "description": "A full-viewport block carrying one 13px uppercase link at the bottom-left, and the 1.2px arrow fixed bottom-right that advances one block; both invert to paper over dark blocks.",
-      "html": "<section class=\"ds-block ds-block-dark\"><h2 class=\"ds-block-label\"><a href=\"#\">Man</a></h2><button class=\"ds-block-arrow\" aria-label=\"Next\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></button></section>",
-      "css": ".ds-block { position: relative; width: 100%; height: 260px; overflow: hidden; color: var(--color-ink, #000); background: linear-gradient(180deg, #e6e1d8 0%, #c9c1b4 100%); } .ds-block-dark { color: var(--color-paper, #fff); background: linear-gradient(180deg, #5a5852 0%, #2d2c29 100%); } .ds-block-label { position: absolute; left: 32px; bottom: 32px; margin: 0; font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 22px; } .ds-block-label a { color: inherit; text-decoration: none; } .ds-block-label a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; } .ds-block-arrow { position: absolute; right: 32px; bottom: 28px; padding: 4px; border: 0; background: none; color: inherit; cursor: pointer; transition: color 0.3s; } .ds-block-arrow svg { display: block; width: 20px; height: 20px; } .ds-block-arrow:hover { opacity: 0.6; } .ds-block-arrow:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }"
+      "description": "One sticky, viewport-tall card of the home deck: a whole-card link with the section name once in the Didone at the bottom-left; the photograph lifts 15% and dims to 50% ink as the next card covers it (--covered), and settles to 1.03 on hover. Shown here at coverage 0.25 on a dark card.",
+      "html": "<section class=\"ds-deck-card ds-deck-card-dark\" style=\"--covered: 0.25\"><a class=\"ds-deck-link\" href=\"#\"><div class=\"ds-deck-photo\"></div><span class=\"ds-deck-dim\" aria-hidden=\"true\"></span><h2 class=\"ds-deck-title\"><span>Man</span></h2></a><button class=\"ds-deck-arrow\" aria-label=\"Next\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></button></section>",
+      "css": ".ds-deck-card { --covered: 0; position: relative; width: 100%; height: 320px; overflow: hidden; background: var(--color-canvas, #f4f3f1); color: var(--color-ink, #000); } .ds-deck-card-dark { background: var(--color-ink, #000); color: var(--color-paper, #fff); } .ds-deck-link { position: absolute; inset: 0; display: block; color: inherit; text-decoration: none; outline: none; } .ds-deck-photo { position: absolute; inset: 0; background: linear-gradient(180deg, #5a5852 0%, #2d2c29 100%); transform: translate3d(0, calc(var(--covered) * -15%), 0); transition: scale 1.2s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; } .ds-deck-link:hover .ds-deck-photo { scale: 1.03; } .ds-deck-dim { position: absolute; inset: 0; background: var(--color-ink, #000); opacity: calc(var(--covered) * 0.5); } .ds-deck-title { position: absolute; left: 32px; bottom: 32px; margin: 0; font-family: var(--font-logo, \"Bodoni Moda\", \"Bodoni 72\", Didot, \"Times New Roman\", serif); font-weight: 400; font-size: clamp(48px, 6.6vw, 96px); line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; opacity: clamp(0, 1 - var(--covered) * 2, 1); } .ds-deck-title span { text-decoration-thickness: 1px; text-underline-offset: 0.12em; } .ds-deck-link:hover .ds-deck-title span, .ds-deck-link:focus-visible .ds-deck-title span { text-decoration: underline; } .ds-deck-arrow { position: absolute; right: 32px; bottom: 28px; padding: 4px; border: 0; background: none; color: inherit; cursor: pointer; transition: color 0.3s, opacity 0.3s; } .ds-deck-arrow svg { display: block; width: 20px; height: 20px; } .ds-deck-arrow:hover { opacity: 0.6; } .ds-deck-arrow:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; } @media (prefers-reduced-motion: reduce) { .ds-deck-photo { transform: none; } }"
+    },
+    {
+      "name": "NEW IN Rail Head",
+      "kind": "nav",
+      "refersTo": "chrome-word",
+      "description": "The head row of the paper card that closes the home deck: NEW IN in 13px ink, WOMAN / MAN / KIDS in caption grey, and the hairline previous/next pair that pages the 2:3 rail by one visible width, each fading to 25% at its end.",
+      "html": "<div class=\"ds-rail-head\"><h2>New in</h2><nav aria-label=\"New in by section\"><a href=\"#\">Woman</a><a href=\"#\">Man</a><a href=\"#\">Kids</a></nav><div class=\"ds-rail-controls\"><button aria-label=\"Previous products\" disabled><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></button><button aria-label=\"Next products\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></button></div></div>",
+      "css": ".ds-rail-head { display: flex; flex-wrap: wrap; align-items: center; column-gap: 40px; width: 100%; max-width: 720px; background: var(--color-paper, #fff); color: var(--color-ink, #000); font-family: var(--font-sans, \"Helvetica Neue\", Inter, Helvetica, Arial, sans-serif); font-weight: 300; text-transform: uppercase; font-size: 13px; line-height: 22px; } .ds-rail-head h2 { margin: 0; font: inherit; } .ds-rail-head nav { display: flex; column-gap: 32px; color: var(--color-muted, #767676); } .ds-rail-head a { color: inherit; text-decoration: none; } .ds-rail-head a:hover { color: var(--color-ink, #000); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; } .ds-rail-controls { margin-left: auto; display: flex; gap: 16px; } .ds-rail-controls button { padding: 4px; border: 0; background: none; color: inherit; cursor: pointer; transition: opacity 0.3s; } .ds-rail-controls button:disabled { opacity: 0.25; cursor: default; } .ds-rail-controls button svg { display: block; width: 20px; height: 20px; } .ds-rail-controls button:first-child svg { transform: rotate(180deg); } .ds-rail-controls button:focus-visible, .ds-rail-head a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }"
     }
   ],
   "narrative": {
     "northStar": "Instruments at the Edges",
-    "overview": "There is no header bar. The page is a white sheet; four instruments float at its corners (menu top-left, search top-right, bag / log in / help stacked at the right edge, filters at the left edge on listings, the view switch bottom-left) and content runs underneath them in a centred column. Everything the interface says, it says in one light uppercase sans at 11, 12 or 13px; the only display voice is the Didone wordmark, and it appears exactly twice: oversized and fixed on the home cover, and at the head of the open menu. This is a faithful recreation of the live zara.com `layout-ss26` grammar measured at 1800px on 2026-09-16, so convention is the commitment and the reference's craft is the bar.\n\nDensity is editorial rather than catalogue: 2:3 imagery in a hero-then-pair rhythm with wide white gutters, product info as three short lines beneath each picture, a product page where the photograph owns the page and the buy column is a narrow annotation beside it. The build refuses the category defaults it replaced: the full-width header with a centred logo, the sticky listing toolbar with breadcrumb and count, the boxed buy panel with a filled CTA and chevron accordions, the 440px drawer menu, and hero slides carrying an eyebrow, a display title and a button.\n\nDepth is flat. Ink on paper, one hairline (1px; 0.5px on the product page's outlined buttons), no radius anywhere, no shadows on interface surfaces. State is expressed by underline, by inversion (ink fills paper on hover), by opacity, and by the chrome turning to paper over dark home blocks.",
+    "overview": "There is no header bar. The page is a white sheet; four instruments float at its corners (menu top-left, search top-right, bag / log in / help stacked at the right edge, filters at the left edge on listings, the view switch bottom-left) and content runs underneath them in a centred column. Everything the interface says, it says in one light uppercase sans at 11, 12 or 13px; the only display voice is the Didone, and it is used three ways: the oversized wordmark fixed over the home deck (reprised at the head of the open menu), the 27px section names in the menu, and the same section names at up to 96px, one per card, on the home deck. This is a faithful recreation of the live zara.com `layout-ss26` grammar measured at 1800px on 2026-09-16, so convention is the commitment and the reference's craft is the bar.\n\nDensity is editorial rather than catalogue: 2:3 imagery in a hero-then-pair rhythm with wide white gutters, product info as three short lines beneath each picture, a product page where the photograph owns the page and the buy column is a narrow annotation beside it. The build refuses the category defaults it replaced: the full-width header with a centred logo, the sticky listing toolbar with breadcrumb and count, the boxed buy panel with a filled CTA and chevron accordions, the 440px drawer menu, and hero slides carrying an eyebrow, a display title, a subline and a button (the home deck sets one serif name per card and nothing else).\n\nDepth is flat. Ink on paper, one hairline (1px; 0.5px on the product page's outlined buttons), no radius anywhere, no shadows on interface surfaces. State is expressed by underline, by inversion (ink fills paper on hover), by opacity, and by the chrome, wordmark and arrow each turning to paper over a dark home card.",
     "keyCharacteristics": [
       "Floating chrome, never a bar: every instrument reads `--chrome-x` / `--chrome-top` and content starts below them in a `--page-col` column.",
       "One sans, one weight: Helvetica Neue Light 300 (Inter 300 self-hosted fallback) in uppercase at 13px chrome, 12px running copy, 11px product info.",
       "Controls are words; the two-line hamburger, the bracketed bag count, the `+` quick add and the bookmark are the enumerated glyph exceptions.",
       "Flat ink on paper: no radius, no interface shadows, hairlines only.",
       "Reduced prices as a black chip with white text; pink is reserved for the menu's SPECIAL PRICES link.",
-      "2:3 imagery everywhere, on a warm studio canvas until real photography lands."
+      "2:3 imagery in listings and product pages, on a warm studio canvas until real product photography lands; the home deck runs full-bleed photographs from `public/home/`, cropped `object-cover` with the focal point 35% in from the left, each card sticky under the next."
     ],
     "rules": [
       {
@@ -323,12 +373,12 @@
       },
       {
         "name": "The Inversion Rule",
-        "body": "Over a `data-slide=\"dark\"` home block the chrome and the arrow switch to paper in full; the open menu lays paper over everything and forces the chrome back to ink.",
+        "body": "Over a `data-slide=\"dark\"` home card each instrument switches to paper with the card under its own band: the top chrome with the card under the top tenth (`data-header-theme`), the wordmark with the card under 58% (`data-mark-theme`), the arrow with the card at the bottom (`data-arrow-theme`), so nothing reads paper over a still-light card. The open menu lays paper over everything and forces the chrome back to ink.",
         "section": "colors"
       },
       {
         "name": "The Three Sizes Rule",
-        "body": "Interface text is 13px, 12px or 11px. Larger sizes exist only for the wordmark, the menu sections and the 15px product name; a display headline on a shopping surface is a defect.",
+        "body": "Interface text is 13px, 12px or 11px. Larger sizes exist only for the wordmark, the menu sections, the home card titles (all three in the Didone) and the 15px product name; a display headline on a shopping surface is a defect.",
         "section": "typography"
       },
       {
@@ -354,14 +404,15 @@
       "**Do** keep every image slot 2:3 on studio canvas (`{colors.studio-canvas}`).",
       "**Do** express state by underline (1px, 4px offset), inversion (ink on paper), or opacity (40% / 85%), with 200–500ms transitions on `--ease-out-expo` or plain ease.",
       "**Do** keep controls as words; when a glyph is required use the 1.2px stroke set at 12–24px.",
-      "**Do** make product-page actions outlined (`.btn-outline`: 0.5px, 40px) and reserve the filled primary for consent, filters and bag/checkout flows."
+      "**Do** make product-page actions outlined (`.btn-outline`: 0.5px, 40px) and reserve the filled primary for consent, filters and bag/checkout flows.",
+      "**Do** make each home card a whole-card link carrying its section name once in the Didone at `clamp(48px, 6.6vw, 96px)`, and invert each instrument only with the card under its own band."
     ],
     "donts": [
       "**Don't** add a header bar, a centred logo on inner pages, breadcrumbs, listing titles or item counts; the reference has none.",
-      "**Don't** use any radius, shadow or gradient on interface surfaces; the only shadow in the build belongs to placeholder art.",
+      "**Don't** use any radius, shadow or gradient on interface surfaces; the build carries no shadow at all.",
       "**Don't** use red or pink for prices or anywhere outside the menu's SPECIAL PRICES link.",
-      "**Don't** set the sans above 15px or below 300 weight on shopping surfaces; the wordmark and the menu sections are the only large type.",
-      "**Don't** put kickers, eyebrows or display titles on home blocks; each block carries one 13px label and nothing else.",
+      "**Don't** set the sans above 15px or below 300 weight on shopping surfaces; the wordmark, the menu sections and the home card titles, all in the Didone, are the only large type.",
+      "**Don't** put kickers, eyebrows, sublines, buttons or a second line of copy on home cards; each card carries its section name once and nothing else, and the sans never sets a title there.",
       "**Don't** replace the product page's text-link panels with chevron accordions or a boxed buy panel."
     ]
   }
