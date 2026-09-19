@@ -25,3 +25,10 @@ export function createApp() {
 
   return app;
 }
+
+/**
+ * Vercel's Express preset uses this file as the function entry and needs the
+ * app itself as the default export. server.ts reuses the same instance.
+ */
+const app = createApp();
+export default app;

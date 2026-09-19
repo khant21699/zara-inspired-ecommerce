@@ -1,12 +1,7 @@
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
 import { Router } from "express";
-import { asyncHandler } from "../../middleware/error.js";
+import spec from "../../openapi.json" with { type: "json" };
 
-// ../../../openapi.json from both src/routes/docs/ and dist/routes/docs/.
-const SPEC_PATH = fileURLToPath(new URL("../../../openapi.json", import.meta.url));
-
-/** The reference page: renders openapi.json with Scalar, loaded from a CDN. */
+/** The reference page: renders the OpenAPI document with Scalar, loaded from a CDN. */
 const DOCS_HTML = `<!doctype html>
 <html lang="en">
 <head>
@@ -25,12 +20,10 @@ const DOCS_HTML = `<!doctype html>
 
 export const docsRouter = Router();
 
-docsRouter.get(
-  "/openapi.json",
-  asyncHandler(async (_req, res) => {
-    res.type("application/json").send(await readFile(SPEC_PATH, "utf8"));
-  }),
-);
+// Imported rather than read from disk so serverless bundlers ship it with the function.
+docsRouter.get("/openapi.json", (_req, res) => {
+  res.json(spec);
+});
 
 docsRouter.get("/docs", (_req, res) => {
   res.type("html").send(DOCS_HTML);

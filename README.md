@@ -44,7 +44,7 @@ apps/
 
 Express 5 + Postgres, in `apps/api`. Development base URL: `http://localhost:4000`.
 
-The API documents itself: **`GET /docs`** is an interactive reference (try requests, copy snippets in any language) rendered from **`GET /openapi.json`**, the OpenAPI 3.1 document at `apps/api/openapi.json`. That file is the contract; keep it in step with the routes. The guide below is the same information for reading in the repo.
+The API documents itself: **`GET /docs`** is an interactive reference (try requests, copy snippets in any language) rendered from **`GET /openapi.json`**, the OpenAPI 3.1 document at `apps/api/src/openapi.json`. That file is the contract; keep it in step with the routes. The guide below is the same information for reading in the repo.
 
 ### Conventions
 

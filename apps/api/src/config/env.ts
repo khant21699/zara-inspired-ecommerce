@@ -15,8 +15,8 @@ const schema = z.object({
 const parsedEnv = schema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error("Invalid environment variables:", parsedEnv.error.format());
-  process.exit(1);
+  // Throw rather than exit so a serverless host's runtime log shows the reason.
+  throw new Error(`Invalid environment variables: ${JSON.stringify(z.treeifyError(parsedEnv.error))}`);
 }
 
 export const env = parsedEnv.data;
