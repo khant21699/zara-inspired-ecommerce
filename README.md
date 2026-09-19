@@ -57,7 +57,7 @@ The API documents itself: **`GET /docs`** is an interactive reference (try reque
   { "error": { "code": "VALIDATION_ERROR", "message": "section: Invalid option: expected one of \"woman\"|\"man\"|\"kids\"" } }
   ```
   `400 VALIDATION_ERROR` for a bad query, `404 PRODUCT_NOT_FOUND` for an unknown slug, `404 NOT_FOUND` for an unknown route, `500 INTERNAL_ERROR` otherwise.
-- CORS: browsers may call the API from the origins listed in `FRONTEND_ORIGIN` (comma-separated; default `http://localhost:3000`).
+- CORS: browsers may call the API only from the origins listed in `FRONTEND_ORIGIN` (comma-separated; default `http://localhost:3000`; `*` matches anything, so `https://*.vercel.app` covers preview deployments). Server-side fetches from Next are not subject to it, so a wrong value shows up as a broken search (the one browser-side call) while listings still render.
 
 ### Product shape
 
@@ -195,7 +195,7 @@ The virtual categories are not in this tree; the web app adds NEW IN, SPECIAL PR
 | --- | --- |
 | `DATABASE_URL` | Postgres connection string. TLS is used automatically unless the host is `localhost`. |
 | `PORT` | Local port (`4000`). Hosts inject their own in production. |
-| `FRONTEND_ORIGIN` | Allowed browser origins, comma-separated. |
+| `FRONTEND_ORIGIN` | Allowed browser origins, comma-separated; `*` wildcards allowed. Must include the deployed web app's origin, e.g. `https://zara-inspired-ecommerce.vercel.app,https://*.vercel.app,http://localhost:3000`. |
 | `NODE_ENV` | `development` (default) or `production` (hides error details). |
 
 ### Database

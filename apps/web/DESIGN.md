@@ -168,7 +168,7 @@ Derived tints seen in the build, not tokens: ink at up to 50% as the veil over a
 **Character:** A single light weight of a neutral grotesque, always uppercase in the interface, set small and left alone; the Didone is the only face allowed to be large, and it only ever says the house name or a section name.
 
 ### Hierarchy
-- **Wordmark** (500, `clamp(96px, 12.9vw, 300px)`, line-height 1, tracking -0.06em): the home only, fixed at the right edge and vertically centred at 58% of the viewport over the whole deck, fading out (300ms) once the closing NEW IN card holds the viewport. The menu reuses the face at 92px, line-height 0.9, same tracking.
+- **Wordmark** (500, `clamp(96px, 12.9vw, 300px)`, line-height 1, tracking -0.06em): the home only, fixed at the right edge and vertically centred at 58% of the viewport over the whole deck, fading out (300ms) once the closing NEW IN card holds the viewport. The menu reuses the face at 92px (44px on phones, where it is the only way home) at the head of the sheet, line-height 0.9, same tracking, as a link to `/`.
 - **Home card title** (400, `clamp(48px, 6.6vw, 96px)`, line-height 1, tracking -0.03em, uppercase): WOMAN / MAN / KIDS / SALE / PERFUMES, once per deck card at (`--chrome-x`, bottom-24/32), paper on dark cards, ink on light; a 1px underline at 0.12em offset on hover and keyboard focus. It fades out over the first half of the card's coverage.
 - **Menu section** (400, 27px, 36px rows, tracking -0.02em): WOMAN / MAN / KIDS / PRE-OWNED in the open menu, uppercase, with a 4px ink dot 20px left of the active one.
 - **Product name** (300, 15px / 24px): the product-page title. The only 15px in the system.

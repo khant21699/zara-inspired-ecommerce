@@ -45,6 +45,20 @@ function groupsFor(section: Section): Group[] {
   ];
 }
 
+/** Phone mark for the open section (desktop uses the gutter dot instead). */
+const ACTIVE_PHONE =
+  "underline decoration-1 underline-offset-8 md:no-underline";
+
+/** Desktop mark for the open section: a dot in the gutter left of the column. */
+function ActiveDot() {
+  return (
+    <span
+      aria-hidden
+      className="absolute -left-5 top-[15px] hidden h-1 w-1 rounded-full bg-ink md:block"
+    />
+  );
+}
+
 /** Link label that marks itself while that link's navigation is in flight. */
 function Pending({
   children,
@@ -57,7 +71,10 @@ function Pending({
 }) {
   const { pending } = useLinkStatus();
   return (
-    <span aria-busy={pending || undefined} className={cn(className, pending && pendingClassName)}>
+    <span
+      aria-busy={pending || undefined}
+      className={cn(className, pending && pendingClassName)}
+    >
       {children}
     </span>
   );
@@ -113,27 +130,25 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
     >
       <div className="absolute inset-x-0 bottom-0 top-(--chrome-top) overflow-y-auto overscroll-contain md:top-0">
         <div className="relative mx-auto min-h-full w-full px-4 pb-16 md:w-(--page-col) md:px-0 md:pt-6">
+          {/* The wordmark is the way home from any page: 92px in the reference's
+              desktop column, 44px on phones where the chrome carries no logo. */}
           <Link
             href="/"
             onClick={() => go("/")}
             aria-label="Home"
-            className="hidden font-logo text-[92px] font-medium uppercase leading-[0.9] tracking-[-0.06em] md:block"
+            className="block font-logo text-[44px] font-medium uppercase leading-[0.9] tracking-[-0.06em] md:text-[92px]"
           >
             <Pending pendingClassName="opacity-60">Zara</Pending>
           </Link>
 
-          <div className="md:mt-[86px] md:flex md:items-start">
-            {/* Sections */}
+          <div className="mt-6 md:mt-[86px] md:flex md:items-start">
+            {/* Sections: the reference marks the open one with a dot in the gutter
+                left of the column; phones have no gutter, so the mark is an underline. */}
             <nav aria-label="Sections" className="md:w-[22%] md:shrink-0">
               <ul className="font-logo text-[27px] uppercase leading-9 tracking-[-0.02em]">
                 {SECTIONS.map((s) => (
                   <li key={s.slug} className="relative">
-                    {tab === s.slug && (
-                      <span
-                        aria-hidden
-                        className="absolute -left-5 top-[15px] h-1 w-1 rounded-full bg-ink"
-                      />
-                    )}
+                    {tab === s.slug && <ActiveDot />}
                     <button
                       ref={
                         s.slug === SECTIONS[0].slug ? firstSection : undefined
@@ -141,19 +156,31 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                       type="button"
                       onClick={() => setTab(s.slug)}
                       aria-pressed={tab === s.slug}
-                      className="hover:underline hover:underline-offset-8"
+                      className={cn(
+                        "hover:underline hover:underline-offset-8",
+                        tab === s.slug && ACTIVE_PHONE,
+                      )}
                     >
                       {s.name}
                     </button>
                   </li>
                 ))}
-                <li>
+                <li className="relative">
+                  {pathname === "/pre-owned" && <ActiveDot />}
                   <Link
                     href="/pre-owned"
                     onClick={() => go("/pre-owned")}
-                    className="hover:underline hover:underline-offset-8"
+                    aria-current={
+                      pathname === "/pre-owned" ? "page" : undefined
+                    }
+                    className={cn(
+                      "hover:underline hover:underline-offset-8",
+                      pathname === "/pre-owned" && ACTIVE_PHONE,
+                    )}
                   >
-                    <Pending pendingClassName="underline underline-offset-8">Pre-owned</Pending>
+                    <Pending pendingClassName="underline underline-offset-8">
+                      Pre-owned
+                    </Pending>
                   </Link>
                 </li>
               </ul>
@@ -165,7 +192,9 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                       onClick={() => go(l.href)}
                       className="hover:text-ink"
                     >
-                      <Pending pendingClassName="text-ink underline underline-offset-4">{l.name}</Pending>
+                      <Pending pendingClassName="text-ink underline underline-offset-4">
+                        {l.name}
+                      </Pending>
                     </Link>
                   </li>
                 ))}
@@ -194,7 +223,9 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                             g.sale && "text-sale",
                           )}
                         >
-                          <Pending>{g.sale ? "Special prices" : c.name}</Pending>
+                          <Pending>
+                            {g.sale ? "Special prices" : c.name}
+                          </Pending>
                         </Link>
                       </li>
                     ))}
@@ -223,7 +254,10 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                         className="absolute inset-0"
                       />
                     </span>
-                    <Pending className="mt-2 block text-2xs uppercase" pendingClassName="underline underline-offset-4">
+                    <Pending
+                      className="mt-2 block text-2xs uppercase"
+                      pendingClassName="underline underline-offset-4"
+                    >
                       {category.name}
                     </Pending>
                   </Link>

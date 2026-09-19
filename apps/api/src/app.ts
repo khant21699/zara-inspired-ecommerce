@@ -1,6 +1,7 @@
 // src/app.ts
 import cors from "cors";
 import express from "express";
+import { allowedOrigins } from "./config/cors.js";
 import { env } from "./config/env.js";
 import { notFound, errorHandler } from "./middleware/error.js";
 import { healthRouter } from "./routes/health/health.routes.js";
@@ -11,7 +12,9 @@ import { productsRouter, searchRouter } from "./routes/product/products.routes.j
 export function createApp() {
   const app = express();
 
-  app.use(cors({ origin: env.FRONTEND_ORIGIN }));
+  // Browsers may call the API only from the web app's origins (server-side
+  // fetches from Next are not subject to CORS). See config/cors.ts.
+  app.use(cors({ origin: allowedOrigins(env.FRONTEND_ORIGIN) }));
   app.use(express.json());
 
   app.use("/health", healthRouter);
