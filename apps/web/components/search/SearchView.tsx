@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useState } from "react";
-import { searchProducts } from "@/lib/data/products";
+import { useDeferredValue, useEffect, useState } from "react";
+import { searchProducts } from "@/lib/api/products";
 import { SECTIONS } from "@/lib/data/catalog";
-import type { SectionSlug } from "@/lib/types";
+import type { Product, SectionSlug } from "@/lib/types";
 import { cn } from "@/lib/format";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { CloseIcon } from "@/components/ui/Icons";
@@ -15,8 +15,31 @@ export function SearchView() {
   const [query, setQuery] = useState("");
   const [section, setSection] = useState<SectionSlug | "all">("all");
   const deferred = useDeferredValue(query);
-  const results = searchProducts(deferred, section);
+  const [results, setResults] = useState<Product[]>([]);
+  const [failed, setFailed] = useState(false);
   const hasQuery = deferred.trim().length > 0;
+
+  useEffect(() => {
+    const q = deferred.trim();
+    if (!q) return;
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => {
+      searchProducts(q, section === "all" ? undefined : section, controller.signal)
+        .then((items) => {
+          setResults(items);
+          setFailed(false);
+        })
+        .catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+          setResults([]);
+          setFailed(true);
+        });
+    }, 150);
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
+  }, [deferred, section]);
 
   return (
     <div>
@@ -92,7 +115,9 @@ export function SearchView() {
           <ProductGrid
             products={results}
             title={`${results.length} ${results.length === 1 ? "result" : "results"} for "${deferred.trim()}"`}
-            emptyMessage={`No results for "${deferred.trim()}". Try another term.`}
+            emptyMessage={
+              failed ? "Search is unavailable right now. Try again in a moment." : `No results for "${deferred.trim()}". Try another term.`
+            }
           />
         </div>
       )}

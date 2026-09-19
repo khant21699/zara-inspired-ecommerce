@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { getProductById } from "@/lib/data/products";
 import { bagCount, store, useHydrated, useStore } from "@/lib/store";
 import { formatPrice } from "@/lib/format";
 import { ProductArt } from "@/components/product/ProductArt";
@@ -13,11 +12,7 @@ export function BagView() {
   const hydrated = useHydrated();
   const { bag } = useStore();
 
-  const lines = bag
-    .map((item) => ({ item, product: getProductById(item.productId) }))
-    .filter((l): l is { item: (typeof bag)[number]; product: NonNullable<ReturnType<typeof getProductById>> } =>
-      Boolean(l.product),
-    );
+  const lines = bag.map((item) => ({ item, product: item.product }));
 
   const count = bagCount(bag);
   const subtotal = lines.reduce((sum, l) => sum + l.product.price * l.item.qty, 0);

@@ -35,7 +35,7 @@ export function ProductArt({
   priority,
 }: Props) {
   const gradientId = useId();
-  const src = product.images[variant];
+  const src = product.colors[colorIndex]?.images?.[variant] ?? product.images[variant];
 
   if (src) {
     return (

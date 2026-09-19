@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
     // Product data accepts real image URLs; allow any https host so they can
     // be dropped in without touching config.
     remotePatterns: [{ protocol: "https", hostname: "**" }],
+    // The catalogue's placeholder art (placehold.co) is served as SVG, which the
+    // optimiser refuses by default. Allow it, sandboxed and never inline.
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 };
 

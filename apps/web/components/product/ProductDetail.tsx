@@ -61,14 +61,19 @@ export function ProductDetail({ product, related }: Props) {
   const [panel, setPanel] = useState<(typeof PANELS)[number]["id"] | null>(null);
   const [zoom, setZoom] = useState<(typeof SHOTS)[number]["variant"] | null>(null);
   const { wishlist } = useStore();
-  const wished = wishlist.includes(product.id);
+  const wished = wishlist.some((p) => p.slug === product.slug);
   const color = product.colors[colorIndex];
-  const singleSize = product.sizes.length === 1;
+  // With photographs, show one shot per image; the studio placeholder has all four variants.
+  const photoCount = (color.images ?? product.images).length;
+  const shots = photoCount > 0 ? SHOTS.slice(0, Math.max(photoCount, 2)) : SHOTS;
+  // The chosen colour's stock list when the API supplied one; otherwise every size, assumed in stock.
+  const sizes = color.sizes ?? product.sizes.map((size) => ({ size, inStock: true }));
+  const singleSize = sizes.length === 1;
   // A "look" is built from other categories, not more of the same item.
   const look = related.filter((p) => p.category !== product.category).slice(0, 3);
 
   const add = (size: string) => {
-    store.addToBag(product.id, size, color.name);
+    store.addToBag(product, size, color.name);
     setSizesOpen(false);
   };
 
@@ -76,7 +81,7 @@ export function ProductDetail({ product, related }: Props) {
     <div className="relative -mt-(--chrome-top) md:-mt-[128px]">
       {/* Gallery: a swipe strip on phones, a staggered editorial column on desktop. */}
       <div className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto md:block md:overflow-visible">
-        {SHOTS.map((shot, i) => (
+        {shots.map((shot, i) => (
           <div
             key={shot.variant}
             className={cn("relative w-full shrink-0 snap-start md:mt-28 md:first:mt-0", shot.className)}
@@ -113,7 +118,7 @@ export function ProductDetail({ product, related }: Props) {
           <h1 className="text-[15px] uppercase leading-6">{product.name}</h1>
           <button
             type="button"
-            onClick={() => store.toggleWishlist(product.id)}
+            onClick={() => store.toggleWishlist(product)}
             aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
             aria-pressed={wished}
             className="mt-1 shrink-0"
@@ -151,7 +156,7 @@ export function ProductDetail({ product, related }: Props) {
         <div className="mt-6 grid grid-cols-2 gap-[18px]">
           <button
             type="button"
-            onClick={() => (singleSize ? add(product.sizes[0]) : setSizesOpen((o) => !o))}
+            onClick={() => (singleSize ? add(sizes[0]!.size) : setSizesOpen((o) => !o))}
             aria-expanded={singleSize ? undefined : sizesOpen}
             className="btn-outline"
           >
@@ -164,14 +169,16 @@ export function ProductDetail({ product, related }: Props) {
 
         {sizesOpen && (
           <ul className="mt-2 animate-fade-up border-t border-line" aria-label="Select a size">
-            {product.sizes.map((s) => (
-              <li key={s} className="border-b border-line">
+            {sizes.map(({ size, inStock }) => (
+              <li key={size} className="border-b border-line">
                 <button
                   type="button"
-                  onClick={() => add(s)}
-                  className="flex h-10 w-full items-center text-chrome uppercase hover:bg-canvas"
+                  onClick={() => add(size)}
+                  disabled={!inStock}
+                  className="flex h-10 w-full items-center justify-between text-chrome uppercase hover:bg-canvas disabled:text-muted disabled:hover:bg-transparent"
                 >
-                  {s}
+                  <span>{size}</span>
+                  {!inStock && <span className="text-2xs">Out of stock</span>}
                 </button>
               </li>
             ))}

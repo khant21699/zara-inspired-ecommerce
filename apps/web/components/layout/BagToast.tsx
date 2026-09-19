@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { getProductById } from "@/lib/data/products";
 import { store, useStore } from "@/lib/store";
 import { formatPrice } from "@/lib/format";
 import { ProductArt } from "@/components/product/ProductArt";
@@ -19,8 +18,7 @@ export function BagToast() {
   }, [lastAdded]);
 
   if (!lastAdded) return null;
-  const product = getProductById(lastAdded.productId);
-  if (!product) return null;
+  const { product } = lastAdded;
 
   return (
     <div

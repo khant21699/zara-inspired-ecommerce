@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SideMenu } from "./SideMenu";
+import type { MenuRail } from "@/lib/api/products";
 import { bagCount, useStore } from "@/lib/store";
 import { cn } from "@/lib/format";
 
@@ -13,7 +14,7 @@ import { cn } from "@/lib/format";
  * right edge) and content runs underneath. The wordmark appears only on the
  * home surface, oversized and fixed at the right.
  */
-export function Header() {
+export function Header({ menuRail }: { menuRail: MenuRail }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const { bag } = useStore();
@@ -101,7 +102,7 @@ export function Header() {
         )}
       </header>
 
-      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} rail={menuRail} />
     </>
   );
 }

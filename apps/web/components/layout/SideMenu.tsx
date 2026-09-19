@@ -4,14 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { MENU_LINKS, SECTIONS, isSectionSlug } from "@/lib/data/catalog";
-import { getProducts } from "@/lib/data/products";
-import type { Category, Product, Section, SectionSlug } from "@/lib/types";
+import type { MenuRail } from "@/lib/api/products";
+import type { Category, Section, SectionSlug } from "@/lib/types";
 import { ProductArt } from "@/components/product/ProductArt";
 import { cn } from "@/lib/format";
 
 interface Props {
   open: boolean;
   onClose: () => void;
+  /** Image rail per section, fetched by the layout. */
+  rail: MenuRail;
 }
 
 /*
@@ -42,26 +44,7 @@ function groupsFor(section: Section): Group[] {
   ];
 }
 
-/** One representative product per rail slot: new in, then the first real categories. */
-function railFor(section: Section): { category: Category; product: Product }[] {
-  const slots = [
-    section.categories.find((c) => c.slug === "new-in"),
-    ...section.categories.filter((c) => !c.virtual).slice(0, 4),
-  ].filter((c): c is Category => c !== undefined);
-  const seen = new Set<string>();
-  const rail: { category: Category; product: Product }[] = [];
-  for (const category of slots) {
-    const product = getProducts(section.slug, category.slug).find(
-      (p) => !seen.has(p.id),
-    );
-    if (!product) continue;
-    seen.add(product.id);
-    rail.push({ category, product });
-  }
-  return rail;
-}
-
-export function SideMenu({ open, onClose }: Props) {
+export function SideMenu({ open, onClose, rail: railBySection }: Props) {
   const pathname = usePathname();
   const currentSection = pathname.split("/")[1];
   const [tab, setTab] = useState<SectionSlug>(
@@ -81,7 +64,7 @@ export function SideMenu({ open, onClose }: Props) {
 
   const section = SECTIONS.find((s) => s.slug === tab) ?? SECTIONS[0];
   const groups = groupsFor(section);
-  const rail = railFor(section);
+  const rail = railBySection[section.slug];
 
   return (
     <div

@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SECTIONS, getCategory, getSection, isSectionSlug } from "@/lib/data/catalog";
-import { getProducts } from "@/lib/data/products";
+import { getCategory, getSection, isSectionSlug } from "@/lib/data/catalog";
+import { fetchProducts } from "@/lib/api/products";
 import { Page } from "@/components/ui/Page";
 import { ProductGrid } from "@/components/product/ProductGrid";
 
-export function generateStaticParams() {
-  return SECTIONS.flatMap((s) => s.categories.map((c) => ({ section: s.slug, category: c.slug })));
-}
+// Rendered on request and cached; the catalogue comes from the API.
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -26,7 +25,7 @@ export default async function CategoryPage({ params }: PageProps<"/[section]/[ca
   const c = getCategory(section, category);
   if (!s || !c) notFound();
 
-  const products = getProducts(section, category);
+  const products = await fetchProducts(section, category);
 
   // The listing opens on product: categories live in the menu, the heading is
   // for assistive tech and the document title only.
