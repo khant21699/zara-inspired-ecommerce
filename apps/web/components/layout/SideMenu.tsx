@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import type React from "react";
 import { MENU_LINKS, SECTIONS, isSectionSlug } from "@/lib/data/catalog";
 import type { MenuRail } from "@/lib/api/products";
 import type { Category, Section, SectionSlug } from "@/lib/types";
@@ -44,6 +45,24 @@ function groupsFor(section: Section): Group[] {
   ];
 }
 
+/** Link label that marks itself while that link's navigation is in flight. */
+function Pending({
+  children,
+  className,
+  pendingClassName = "underline underline-offset-4",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  pendingClassName?: string;
+}) {
+  const { pending } = useLinkStatus();
+  return (
+    <span aria-busy={pending || undefined} className={cn(className, pending && pendingClassName)}>
+      {children}
+    </span>
+  );
+}
+
 export function SideMenu({ open, onClose, rail: railBySection }: Props) {
   const pathname = usePathname();
   const currentSection = pathname.split("/")[1];
@@ -51,6 +70,21 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
     isSectionSlug(currentSection) ? currentSection : "woman",
   );
   const firstSection = useRef<HTMLButtonElement>(null);
+  const lastPathname = useRef(pathname);
+
+  // Keep the sheet up while the chosen page loads; close only once the
+  // navigation has landed, so the old page never flashes underneath.
+  // (Each link shows its own in-flight state through <Pending>.)
+  useEffect(() => {
+    if (lastPathname.current === pathname) return;
+    lastPathname.current = pathname;
+    onClose();
+  }, [pathname, onClose]);
+
+  // A link to the page already open would never change the pathname.
+  const go = (href: string) => {
+    if (href === pathname) onClose();
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -81,11 +115,11 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
         <div className="relative mx-auto min-h-full w-full px-4 pb-16 md:w-(--page-col) md:px-0 md:pt-6">
           <Link
             href="/"
-            onClick={onClose}
+            onClick={() => go("/")}
             aria-label="Home"
             className="hidden font-logo text-[92px] font-medium uppercase leading-[0.9] tracking-[-0.06em] md:block"
           >
-            Zara
+            <Pending pendingClassName="opacity-60">Zara</Pending>
           </Link>
 
           <div className="md:mt-[86px] md:flex md:items-start">
@@ -116,10 +150,10 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                 <li>
                   <Link
                     href="/pre-owned"
-                    onClick={onClose}
+                    onClick={() => go("/pre-owned")}
                     className="hover:underline hover:underline-offset-8"
                   >
-                    Pre-owned
+                    <Pending pendingClassName="underline underline-offset-8">Pre-owned</Pending>
                   </Link>
                 </li>
               </ul>
@@ -128,10 +162,10 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      onClick={onClose}
+                      onClick={() => go(l.href)}
                       className="hover:text-ink"
                     >
-                      {l.name}
+                      <Pending pendingClassName="text-ink underline underline-offset-4">{l.name}</Pending>
                     </Link>
                   </li>
                 ))}
@@ -154,13 +188,13 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                       <li key={c.slug} className="leading-9">
                         <Link
                           href={`/${section.slug}/${c.slug}`}
-                          onClick={onClose}
+                          onClick={() => go(`/${section.slug}/${c.slug}`)}
                           className={cn(
                             "hover:underline hover:underline-offset-4",
                             g.sale && "text-sale",
                           )}
                         >
-                          {g.sale ? "Special prices" : c.name}
+                          <Pending>{g.sale ? "Special prices" : c.name}</Pending>
                         </Link>
                       </li>
                     ))}
@@ -178,7 +212,7 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                 <li key={category.slug} className="w-[174px] shrink-0">
                   <Link
                     href={`/${section.slug}/${category.slug}`}
-                    onClick={onClose}
+                    onClick={() => go(`/${section.slug}/${category.slug}`)}
                     className="block"
                   >
                     <span className="relative block aspect-[2/3] bg-canvas">
@@ -189,9 +223,9 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                         className="absolute inset-0"
                       />
                     </span>
-                    <span className="mt-2 block text-2xs uppercase">
+                    <Pending className="mt-2 block text-2xs uppercase" pendingClassName="underline underline-offset-4">
                       {category.name}
-                    </span>
+                    </Pending>
                   </Link>
                 </li>
               ))}
