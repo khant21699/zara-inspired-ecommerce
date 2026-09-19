@@ -1,5 +1,5 @@
-import { query } from "../../db/pool.ts";
-import { AppError } from "../../middleware/error.ts";
+import { query } from "../../db/pool.js";
+import { AppError } from "../../middleware/error.js";
 
 export async function getProduct(id: string) {
   const rows = await query(

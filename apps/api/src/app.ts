@@ -1,8 +1,8 @@
 // src/app.ts
 import express from "express";
-import { notFound, errorHandler } from "./middleware/error.ts";
-import { healthRouter } from "./routes/health/health.routes.ts";
-import { productsRouter } from "./routes/product/products.routes.ts";
+import { notFound, errorHandler } from "./middleware/error.js";
+import { healthRouter } from "./routes/health/health.routes.js";
+import { productsRouter } from "./routes/product/products.routes.js";
 
 export function createApp() {
   const app = express();

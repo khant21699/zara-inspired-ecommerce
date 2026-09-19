@@ -26,7 +26,7 @@ Fidelity is the feature. This is not a generic e-commerce template or a "Zara-fl
 
 - Reviewed via a shared link; the comparison target is the live reference site. Phone and desktop both matter.
 - Two runnable apps in the parent folder. `../`: Express API, `npm run dev` (`tsx watch src/server.ts`), `PORT` and `DATABASE_URL` from `.env`, hosted Postgres over SSL. ``: Next.js App Router, `npm run dev`. The frontend does not yet call the API; it reads static data.
-- `` has its own git repository (one commit from create-next-app); the root folder is not under version control.
+- The repo root is the single git repository for both apps.
 - Client state (bag, wishlist, cookie consent) is persisted in `localStorage` under `zara-clone:v1` via `lib/store.ts`.
 - Next.js 16 carries breaking changes versus common training data; `AGENTS.md` requires reading `node_modules/next/dist/docs/` before writing framework code.
 

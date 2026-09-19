@@ -1,29 +1,24 @@
 {
-  "name": "zara-instpird-ecommerce",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/server.js",
+  "name": "zara-inspired-ecommerce",
+  "private": true,
+  "description": "Zara-inspired storefront: Next.js web app and Express API in one repo, deployed separately.",
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "pg": "^8.23.0",
-    "zod": "^4.5.4"
+    "dev": "concurrently -n web,api -c cyan,magenta \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "npm run dev -w apps/web",
+    "dev:api": "npm run dev -w apps/api",
+    "build": "npm run build --workspaces",
+    "build:web": "npm run build -w apps/web",
+    "build:api": "npm run build -w apps/api",
+    "typecheck": "npm run typecheck --workspaces",
+    "lint": "npm run lint -w apps/web"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/node": "^26.5.0",
-    "@types/pg": "^8.23.1",
-    "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }

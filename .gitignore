@@ -1,13 +1,13 @@
 # --- dependencies ---
 node_modules/
 
-# --- builds ---
+# --- builds (any workspace) ---
 dist/
-frontend/.next/
-frontend/out/
-frontend/build/
+.next/
+out/
+build/
 *.tsbuildinfo
-frontend/next-env.d.ts
+next-env.d.ts
 
 # --- environment ---
 .env
