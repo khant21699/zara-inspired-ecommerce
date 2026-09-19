@@ -1,10 +1,12 @@
 import { Router } from "express";
-import {
-  getAllProducts,
-  getProductByID,
-} from "../../modules/product/product.controller.js";
+import { getProduct, getRelated, listProducts, searchProducts } from "../../modules/product/product.controller.js";
 
 export const productsRouter = Router();
 
-productsRouter.get("/:id", getProductByID);
-productsRouter.get("/", getAllProducts);
+productsRouter.get("/", listProducts);
+productsRouter.get("/:slug", getProduct);
+productsRouter.get("/:slug/related", getRelated);
+
+export const searchRouter = Router();
+
+searchRouter.get("/", searchProducts);
