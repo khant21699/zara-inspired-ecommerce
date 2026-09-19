@@ -1,3 +1,7 @@
+/**
+ * The original static catalogue. The web app reads the API now (lib/api);
+ * this file remains only as the input for apps/api/scripts/generate-catalog-seed.ts.
+ */
 import type { Product, SectionSlug, Shape } from "../types";
 import { COLORS } from "./colors";
 import { slugify } from "../format";

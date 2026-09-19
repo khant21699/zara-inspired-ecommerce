@@ -19,6 +19,10 @@ export type Shape =
 export interface ProductColor {
   name: string;
   hex: string;
+  /** This colour's photographs; falls back to the product images when absent. */
+  images?: string[];
+  /** Stock per size for this colour, in display order. */
+  sizes?: { size: string; inStock: boolean }[];
 }
 
 export interface Product {

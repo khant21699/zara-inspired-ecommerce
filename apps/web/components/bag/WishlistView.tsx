@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { getProductById } from "@/lib/data/products";
 import { useHydrated, useStore } from "@/lib/store";
 import { ProductGrid } from "@/components/product/ProductGrid";
 
 export function WishlistView() {
   const hydrated = useHydrated();
   const { wishlist } = useStore();
-  const products = wishlist.map(getProductById).filter((p) => p !== undefined);
+  const products = wishlist;
 
   return (
     <div className="pb-24">

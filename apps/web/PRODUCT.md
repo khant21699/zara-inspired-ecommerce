@@ -43,14 +43,14 @@ Fidelity is the feature. This is not a generic e-commerce template or a "Zara-fl
 - `/company`, `/join-life`, `/legal/[slug]` static content.
 
 **Planned (confirmed 2026-09-16):**
-- Catalog served from the Express API, replacing the 266 static products in `lib/data/products.ts`.
+- ~~Catalog served from the Express API~~ — done 2026-09-19: listings, product pages, search, related items and the menu rail read the API; the static catalogue now lives only as the seed source in `apps/api/scripts/source/products.ts`.
 - Accounts & login (registration, login, My Account, purchase history).
 - Checkout, orders, and payments with a real payment provider.
 - Real product photography supplied by the author to replace generated placeholders.
 
 **Currently rendering `ComingSoon`, not confirmed as planned:** `/stores`, `/gift-card`, `/newsletter`, `/careers`, `/pre-owned`, `/help/contact`. Treat as open until the author decides.
 
-**API today:** `GET /health`, `GET /products`, `GET /products/:id`, returning `{ id, name, price }` from a `products` table. The frontend `Product` type is far richer (slug, section, category, compareAt, colors, sizes, description, composition, ref, images, shape, tone, isNew, isBestSeller); the database schema must grow to carry it before the catalog can move server-side.
+**API today:** `GET /products` (section/category/sort/colour/size filters, paging), `GET /products/:slug`, `GET /products/:slug/related`, `GET /search`, `GET /categories`, `GET /health`, documented at `GET /docs` (OpenAPI). Postgres holds `categories`, `products`, `product_colours` (images per colour) and `variants` (stock per colour × size); prices are cents.
 
 **Terminology:** sections (WOMAN, MAN, KIDS); categories; virtual categories (NEW IN, SALE, BEST SELLERS); *bag*, never cart; wishlist; quick add; ref (product reference number); compareAt (pre-sale price); Join Life (responsibility label); Pre-owned (repair / resell / donate).
 

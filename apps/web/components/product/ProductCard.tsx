@@ -56,7 +56,7 @@ export function ProductCard({ product, sizes, priority, compact = false, dense =
                   <button
                     type="button"
                     onClick={() => {
-                      store.addToBag(product.id, size, product.colors[0].name);
+                      store.addToBag(product, size, product.colors[0].name);
                       setSizesOpen(false);
                     }}
                     className="min-w-9 border border-line px-2 py-1.5 text-2xs uppercase hover:border-ink"

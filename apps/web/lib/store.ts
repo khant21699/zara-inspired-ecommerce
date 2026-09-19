@@ -1,8 +1,13 @@
 import { useSyncExternalStore } from "react";
+import type { Product } from "./types";
 
+/**
+ * The bag and wishlist keep a snapshot of the product as it was when added
+ * (the catalogue lives in the API now, so nothing can be looked up locally).
+ */
 export interface BagItem {
   id: string;
-  productId: string;
+  product: Product;
   size: string;
   color: string;
   qty: number;
@@ -10,13 +15,14 @@ export interface BagItem {
 
 export interface StoreState {
   bag: BagItem[];
-  wishlist: string[];
+  wishlist: Product[];
   cookieConsent: "accepted" | "rejected" | null;
   /** Last item added to the bag; drives the mini-bag toast. Not persisted. */
-  lastAdded: { productId: string; size: string; at: number } | null;
+  lastAdded: { product: Product; size: string; at: number } | null;
 }
 
-const STORAGE_KEY = "zara-clone:v1";
+// v2: items carry product snapshots instead of ids into the static catalogue.
+const STORAGE_KEY = "zara-clone:v2";
 const EMPTY: StoreState = { bag: [], wishlist: [], cookieConsent: null, lastAdded: null };
 
 let state: StoreState = EMPTY;
@@ -107,13 +113,13 @@ export function bagCount(bag: BagItem[]): number {
 }
 
 export const store = {
-  addToBag(productId: string, size: string, color: string) {
-    const id = `${productId}::${color}::${size}`;
+  addToBag(product: Product, size: string, color: string) {
+    const id = `${product.slug}::${color}::${size}`;
     const existing = state.bag.find((item) => item.id === id);
     const bag = existing
       ? state.bag.map((item) => (item.id === id ? { ...item, qty: item.qty + 1 } : item))
-      : [...state.bag, { id, productId, size, color, qty: 1 }];
-    update({ bag, lastAdded: { productId, size, at: Date.now() } });
+      : [...state.bag, { id, product, size, color, qty: 1 }];
+    update({ bag, lastAdded: { product, size, at: Date.now() } });
   },
   setQty(id: string, qty: number) {
     const bag =
@@ -128,10 +134,10 @@ export const store = {
   clearBag() {
     update({ bag: [] });
   },
-  toggleWishlist(productId: string) {
-    const wishlist = state.wishlist.includes(productId)
-      ? state.wishlist.filter((id) => id !== productId)
-      : [...state.wishlist, productId];
+  toggleWishlist(product: Product) {
+    const wishlist = state.wishlist.some((p) => p.slug === product.slug)
+      ? state.wishlist.filter((p) => p.slug !== product.slug)
+      : [...state.wishlist, product];
     update({ wishlist });
   },
   setCookieConsent(cookieConsent: StoreState["cookieConsent"]) {

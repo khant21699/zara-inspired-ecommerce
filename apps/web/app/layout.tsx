@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
+import { fetchMenuRail } from "@/lib/api/products";
+import { SECTIONS } from "@/lib/data/catalog";
 import { Footer } from "@/components/layout/Footer";
 import { CookieBanner } from "@/components/layout/CookieBanner";
 import { BagToast } from "@/components/layout/BagToast";
@@ -36,11 +38,12 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const menuRail = await fetchMenuRail(SECTIONS);
   return (
     <html lang="en" className={`${wordmark.variable} ${sans.variable} h-full`}>
       <body className="flex min-h-full flex-col">
-        <Header />
+        <Header menuRail={menuRail} />
         <main className="flex-1">{children}</main>
         <Footer />
         <CookieBanner />
