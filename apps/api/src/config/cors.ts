@@ -1,12 +1,24 @@
 /**
- * Browser origins allowed by CORS, from FRONTEND_ORIGIN. Each entry is an
- * exact origin (`https://shop.example.com`) or a pattern with `*` standing
- * for any run of characters (`https://*.vercel.app` covers every preview
- * deployment). Patterns become anchored, case-insensitive regular expressions,
- * which the `cors` package matches against the request's Origin header.
+ * Browser origins allowed by CORS (and trusted by Better Auth), from
+ * FRONTEND_ORIGIN. Each entry is an exact origin (`https://shop.example.com`)
+ * or a pattern with `*` standing for any run of characters
+ * (`https://*.vercel.app` covers every preview deployment).
+ */
+
+/**
+ * Entries the way browsers send the Origin header: trimmed, no path or
+ * trailing slash, lower-case. A pasted URL still matches.
+ */
+export function normalizeOrigins(entries: string[]): string[] {
+  return entries.map((raw) => raw.trim().replace(/\/+$/, "").toLowerCase()).filter(Boolean);
+}
+
+/**
+ * The same list for the `cors` package: exact strings, and anchored
+ * case-insensitive regular expressions for the `*` patterns.
  */
 export function allowedOrigins(entries: string[]): (string | RegExp)[] {
-  return entries.map((entry) => {
+  return normalizeOrigins(entries).map((entry) => {
     if (!entry.includes("*")) return entry;
     const pattern = entry
       .split("*")

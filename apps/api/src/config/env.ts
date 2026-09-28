@@ -10,6 +10,10 @@ const schema = z.object({
     .string()
     .default("http://localhost:3000")
     .transform((v) => v.split(",").map((s) => s.trim()).filter(Boolean)),
+  // Better Auth: signs session cookies and tokens; generate with `npx @better-auth/cli secret`.
+  BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET must be at least 32 characters"),
+  // The API's own public URL (e.g. https://zara-inspired-ecommerce-api.vercel.app); auth routes hang off it.
+  BETTER_AUTH_URL: z.url(),
 });
 
 const parsedEnv = schema.safeParse(process.env);

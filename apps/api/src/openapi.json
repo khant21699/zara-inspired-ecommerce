@@ -3,52 +3,119 @@
   "info": {
     "title": "Storefront API",
     "version": "1.0.0",
-    "description": "Catalogue API for the Zara-inspired storefront (non-commercial portfolio project). Prices are integers in cents. Only live products are returned."
+    "description": "Catalogue and account API for the Zara-inspired storefront (non-commercial portfolio project). Prices are integers in cents. Only live products are returned. Authentication is Better Auth under `/auth/*` (sign up, sign in, sessions; email + password); sessions travel as the `better-auth.session_token` cookie or as `Authorization: Bearer <token>` (the token arrives in the `set-auth-token` response header of sign-up and sign-in). Routes marked with a lock require one of the two."
   },
-  "servers": [{ "url": "http://localhost:4000", "description": "Local development" }],
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Local development"
+    }
+  ],
   "tags": [
-    { "name": "Products", "description": "Listing, detail, related items" },
-    { "name": "Search" },
-    { "name": "Categories" },
-    { "name": "System" }
+    {
+      "name": "Products",
+      "description": "Listing, detail, related items"
+    },
+    {
+      "name": "Search"
+    },
+    {
+      "name": "Categories"
+    },
+    {
+      "name": "System"
+    },
+    {
+      "name": "Account",
+      "description": "The signed-in user (session required)"
+    },
+    {
+      "name": "Auth",
+      "description": "Better Auth routes under /auth, generated from the live configuration. Full interactive reference at /auth/reference."
+    }
   ],
   "paths": {
     "/products": {
       "get": {
-        "tags": ["Products"],
+        "tags": [
+          "Products"
+        ],
         "summary": "List products in a section",
         "description": "NEW IN, SPECIAL PRICES and BEST SELLERS are virtual categories (`new-in`, `sale`, `best-sellers`): flags on products rather than category rows.",
         "parameters": [
-          { "$ref": "#/components/parameters/Section" },
+          {
+            "$ref": "#/components/parameters/Section"
+          },
           {
             "name": "category",
             "in": "query",
-            "description": "A category slug (`dresses`, `jackets`, `girl`, …) or a virtual one.",
-            "schema": { "type": "string", "pattern": "^[a-z0-9-]+$", "examples": ["dresses", "new-in", "sale", "best-sellers"] }
+            "description": "A category slug (`dresses`, `jackets`, `girl`, \u2026) or a virtual one.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$",
+              "examples": [
+                "dresses",
+                "new-in",
+                "sale",
+                "best-sellers"
+              ]
+            }
           },
           {
             "name": "sort",
             "in": "query",
-            "schema": { "type": "string", "enum": ["recommended", "newest", "price-asc", "price-desc"], "default": "recommended" }
+            "schema": {
+              "type": "string",
+              "enum": [
+                "recommended",
+                "newest",
+                "price-asc",
+                "price-desc"
+              ],
+              "default": "recommended"
+            }
           },
           {
             "name": "colours",
             "in": "query",
             "description": "Comma-separated colour names, case-insensitive.",
-            "schema": { "type": "string", "examples": ["black,ecru"] }
+            "schema": {
+              "type": "string",
+              "examples": [
+                "black,ecru"
+              ]
+            }
           },
           {
             "name": "sizes",
             "in": "query",
             "description": "Comma-separated sizes, case-insensitive.",
-            "schema": { "type": "string", "examples": ["m,l"] }
+            "schema": {
+              "type": "string",
+              "examples": [
+                "m,l"
+              ]
+            }
           },
-          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "default": 1 } },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
           {
             "name": "limit",
             "in": "query",
             "description": "Page size. 30 keeps the listing's five-card cycle whole.",
-            "schema": { "type": "integer", "minimum": 1, "maximum": 60, "default": 30 }
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "default": 30
+            }
           }
         ],
         "responses": {
@@ -58,43 +125,89 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": ["items", "total", "page", "limit"],
+                  "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "limit"
+                  ],
                   "properties": {
-                    "items": { "type": "array", "items": { "$ref": "#/components/schemas/Product" } },
-                    "total": { "type": "integer", "description": "Count for the whole filter, not the page." },
-                    "page": { "type": "integer" },
-                    "limit": { "type": "integer" }
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Count for the whole filter, not the page."
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "limit": {
+                      "type": "integer"
+                    }
                   }
                 }
               }
             }
           },
-          "400": { "$ref": "#/components/responses/ValidationError" }
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
         }
       }
     },
     "/products/{slug}": {
       "get": {
-        "tags": ["Products"],
+        "tags": [
+          "Products"
+        ],
         "summary": "Product detail",
-        "parameters": [{ "$ref": "#/components/parameters/Slug" }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Slug"
+          }
+        ],
         "responses": {
           "200": {
             "description": "The product with description, composition, and stock per colour and size.",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProductDetail" } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetail"
+                }
+              }
+            }
           },
-          "404": { "$ref": "#/components/responses/NotFound" }
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
         }
       }
     },
     "/products/{slug}/related": {
       "get": {
-        "tags": ["Products"],
+        "tags": [
+          "Products"
+        ],
         "summary": "Related products",
         "description": "Same category first, then the rest of the section; never the product itself.",
         "parameters": [
-          { "$ref": "#/components/parameters/Slug" },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 24, "default": 8 } }
+          {
+            "$ref": "#/components/parameters/Slug"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 24,
+              "default": 8
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -103,25 +216,62 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": ["items"],
-                  "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/Product" } } }
+                  "required": [
+                    "items"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
-          "404": { "$ref": "#/components/responses/NotFound" }
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
         }
       }
     },
     "/search": {
       "get": {
-        "tags": ["Search"],
+        "tags": [
+          "Search"
+        ],
         "summary": "Search products",
         "description": "Full-text search on name and description (stemmed, so `dresses` finds `dress`) with a substring fallback for partial words typed live.",
         "parameters": [
-          { "name": "q", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1, "maxLength": 80 } },
-          { "name": "section", "in": "query", "schema": { "$ref": "#/components/schemas/Section" } },
-          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 60, "default": 30 } }
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "section",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Section"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "default": 30
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -130,22 +280,36 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": ["items", "total"],
+                  "required": [
+                    "items",
+                    "total"
+                  ],
                   "properties": {
-                    "items": { "type": "array", "items": { "$ref": "#/components/schemas/Product" } },
-                    "total": { "type": "integer" }
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    }
                   }
                 }
               }
             }
           },
-          "400": { "$ref": "#/components/responses/ValidationError" }
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
         }
       }
     },
     "/categories": {
       "get": {
-        "tags": ["Categories"],
+        "tags": [
+          "Categories"
+        ],
         "summary": "Category tree",
         "description": "Sections at the root with their categories beneath, in display order. Virtual categories are not included.",
         "responses": {
@@ -155,8 +319,17 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": ["items"],
-                  "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/SectionNode" } } }
+                  "required": [
+                    "items"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SectionNode"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -166,12 +339,59 @@
     },
     "/health": {
       "get": {
-        "tags": ["System"],
+        "tags": [
+          "System"
+        ],
         "summary": "Health check",
         "responses": {
           "200": {
             "description": "The API is up.",
-            "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string", "const": "OK" } } } } }
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "const": "OK"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "The signed-in user",
+        "operationId": "getMe",
+        "description": "Profile of the caller and the session in use. Send the session cookie (`credentials: \"include\"`) or `Authorization: Bearer <token>`.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Signed in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
           }
         }
       }
@@ -183,14 +403,22 @@
         "name": "section",
         "in": "query",
         "required": true,
-        "schema": { "$ref": "#/components/schemas/Section" }
+        "schema": {
+          "$ref": "#/components/schemas/Section"
+        }
       },
       "Slug": {
         "name": "slug",
         "in": "path",
         "required": true,
         "description": "The last segment of the web app's product URL.",
-        "schema": { "type": "string", "pattern": "^[a-z0-9-]+$", "examples": ["linen-blend-mini-dress-p40004535"] }
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "examples": [
+            "linen-blend-mini-dress-p40004535"
+          ]
+        }
       }
     },
     "responses": {
@@ -198,8 +426,15 @@
         "description": "A query or path parameter failed validation.",
         "content": {
           "application/json": {
-            "schema": { "$ref": "#/components/schemas/Error" },
-            "example": { "error": { "code": "VALIDATION_ERROR", "message": "section: Invalid option: expected one of \"woman\"|\"man\"|\"kids\"" } }
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "VALIDATION_ERROR",
+                "message": "section: Invalid option: expected one of \"woman\"|\"man\"|\"kids\""
+              }
+            }
           }
         }
       },
@@ -207,93 +442,373 @@
         "description": "No live product has that slug.",
         "content": {
           "application/json": {
-            "schema": { "$ref": "#/components/schemas/Error" },
-            "example": { "error": { "code": "PRODUCT_NOT_FOUND", "message": "Product not found" } }
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "PRODUCT_NOT_FOUND",
+                "message": "Product not found"
+              }
+            }
+          }
+        }
+      },
+      "Unauthenticated": {
+        "description": "No valid session",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "UNAUTHENTICATED",
+                "message": "Sign in to continue"
+              }
+            }
           }
         }
       }
     },
     "schemas": {
-      "Section": { "type": "string", "enum": ["woman", "man", "kids"] },
+      "Section": {
+        "type": "string",
+        "enum": [
+          "woman",
+          "man",
+          "kids"
+        ]
+      },
       "Error": {
         "type": "object",
-        "required": ["error"],
+        "required": [
+          "error"
+        ],
         "properties": {
           "error": {
             "type": "object",
-            "required": ["code", "message"],
+            "required": [
+              "code",
+              "message"
+            ],
             "properties": {
-              "code": { "type": "string", "examples": ["VALIDATION_ERROR", "PRODUCT_NOT_FOUND", "NOT_FOUND", "INTERNAL_ERROR"] },
-              "message": { "type": "string" }
+              "code": {
+                "type": "string",
+                "examples": [
+                  "VALIDATION_ERROR",
+                  "PRODUCT_NOT_FOUND",
+                  "NOT_FOUND",
+                  "INTERNAL_ERROR"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
             }
           }
         }
       },
       "ColourSize": {
         "type": "object",
-        "required": ["size", "inStock"],
-        "properties": { "size": { "type": "string", "examples": ["M", "38", "3-4 Y", "ONE SIZE"] }, "inStock": { "type": "boolean" } }
+        "required": [
+          "size",
+          "inStock"
+        ],
+        "properties": {
+          "size": {
+            "type": "string",
+            "examples": [
+              "M",
+              "38",
+              "3-4 Y",
+              "ONE SIZE"
+            ]
+          },
+          "inStock": {
+            "type": "boolean"
+          }
+        }
       },
       "Colour": {
         "type": "object",
-        "required": ["name", "hex", "images", "sizes"],
+        "required": [
+          "name",
+          "hex",
+          "images",
+          "sizes"
+        ],
         "properties": {
-          "name": { "type": "string", "examples": ["SAND"] },
-          "hex": { "type": "string", "pattern": "^#[0-9a-f]{6}$", "examples": ["#c9b58f"] },
-          "images": { "type": "array", "items": { "type": "string", "format": "uri" }, "description": "Front, then detail." },
-          "sizes": { "type": "array", "items": { "$ref": "#/components/schemas/ColourSize" }, "description": "In display order, with stock." }
+          "name": {
+            "type": "string",
+            "examples": [
+              "SAND"
+            ]
+          },
+          "hex": {
+            "type": "string",
+            "pattern": "^#[0-9a-f]{6}$",
+            "examples": [
+              "#c9b58f"
+            ]
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Front, then detail."
+          },
+          "sizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ColourSize"
+            },
+            "description": "In display order, with stock."
+          }
         }
       },
       "Product": {
         "type": "object",
-        "required": ["id", "slug", "name", "ref", "section", "category", "priceCents", "compareAtCents", "isNew", "isBestSeller", "sizes", "images", "colours"],
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "ref",
+          "section",
+          "category",
+          "priceCents",
+          "compareAtCents",
+          "isNew",
+          "isBestSeller",
+          "sizes",
+          "images",
+          "colours"
+        ],
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "slug": { "type": "string", "examples": ["linen-blend-mini-dress-p40004535"] },
-          "name": { "type": "string", "examples": ["LINEN BLEND MINI DRESS"] },
-          "ref": { "type": "string", "description": "Reference number shown as COLOUR | REF.", "examples": ["1185/165"] },
-          "section": { "$ref": "#/components/schemas/Section" },
-          "category": { "type": "string", "examples": ["dresses"] },
-          "priceCents": { "type": "integer", "examples": [4990] },
-          "compareAtCents": { "type": ["integer", "null"], "description": "Original price when on sale; always higher than priceCents.", "examples": [6990] },
-          "isNew": { "type": "boolean" },
-          "isBestSeller": { "type": "boolean" },
-          "sizes": { "type": "array", "items": { "type": "string" }, "description": "Union across colours, in display order." },
-          "images": { "type": "array", "items": { "type": "string", "format": "uri" }, "description": "The first colour's images; what a card shows." },
-          "colours": { "type": "array", "items": { "$ref": "#/components/schemas/Colour" } }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string",
+            "examples": [
+              "linen-blend-mini-dress-p40004535"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "examples": [
+              "LINEN BLEND MINI DRESS"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "description": "Reference number shown as COLOUR | REF.",
+            "examples": [
+              "1185/165"
+            ]
+          },
+          "section": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "category": {
+            "type": "string",
+            "examples": [
+              "dresses"
+            ]
+          },
+          "priceCents": {
+            "type": "integer",
+            "examples": [
+              4990
+            ]
+          },
+          "compareAtCents": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Original price when on sale; always higher than priceCents.",
+            "examples": [
+              6990
+            ]
+          },
+          "isNew": {
+            "type": "boolean"
+          },
+          "isBestSeller": {
+            "type": "boolean"
+          },
+          "sizes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Union across colours, in display order."
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "The first colour's images; what a card shows."
+          },
+          "colours": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Colour"
+            }
+          }
         }
       },
       "ProductDetail": {
         "allOf": [
-          { "$ref": "#/components/schemas/Product" },
+          {
+            "$ref": "#/components/schemas/Product"
+          },
           {
             "type": "object",
-            "required": ["description", "composition"],
+            "required": [
+              "description",
+              "composition"
+            ],
             "properties": {
-              "description": { "type": "string" },
-              "composition": { "type": "string", "description": "Newline-separated blocks, e.g. OUTER SHELL / fibres, LINING / fibres." }
+              "description": {
+                "type": "string"
+              },
+              "composition": {
+                "type": "string",
+                "description": "Newline-separated blocks, e.g. OUTER SHELL / fibres, LINING / fibres."
+              }
             }
           }
         ]
       },
       "CategoryNode": {
         "type": "object",
-        "required": ["slug", "name", "path"],
+        "required": [
+          "slug",
+          "name",
+          "path"
+        ],
         "properties": {
-          "slug": { "type": "string", "examples": ["dresses"] },
-          "name": { "type": "string", "examples": ["DRESSES"] },
-          "path": { "type": "string", "examples": ["woman/dresses"] }
+          "slug": {
+            "type": "string",
+            "examples": [
+              "dresses"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "examples": [
+              "DRESSES"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "examples": [
+              "woman/dresses"
+            ]
+          }
         }
       },
       "SectionNode": {
         "allOf": [
-          { "$ref": "#/components/schemas/CategoryNode" },
+          {
+            "$ref": "#/components/schemas/CategoryNode"
+          },
           {
             "type": "object",
-            "required": ["categories"],
-            "properties": { "categories": { "type": "array", "items": { "$ref": "#/components/schemas/CategoryNode" } } }
+            "required": [
+              "categories"
+            ],
+            "properties": {
+              "categories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CategoryNode"
+                }
+              }
+            }
           }
         ]
+      },
+      "Me": {
+        "type": "object",
+        "required": [
+          "user",
+          "session"
+        ],
+        "properties": {
+          "user": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "email",
+              "emailVerified",
+              "image",
+              "createdAt"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "emailVerified": {
+                "type": "boolean"
+              },
+              "image": {
+                "type": "string",
+                "nullable": true
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "session": {
+            "type": "object",
+            "required": [
+              "id",
+              "expiresAt"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Session token from the `set-auth-token` header of sign-up / sign-in."
+      },
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "better-auth.session_token",
+        "description": "Session cookie set by sign-up / sign-in (send with credentials)."
       }
     }
   }
