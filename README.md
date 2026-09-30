@@ -40,6 +40,39 @@ apps/
 
 `apps/web/PRODUCT.md` records the product truth and `apps/web/DESIGN.md` the design system; both are the authority for new UI work.
 
+## Accounts in the web app
+
+The storefront signs people in **through its own server**. The browser holds one first-party `HttpOnly` cookie it cannot read; the API session token never reaches client JavaScript, `localStorage`, or a bundle.
+
+```
+browser ──POST /login (server action)──▶ Next server ──POST /auth/sign-in/email──▶ API
+        ◀──Set-Cookie: zara.session (HttpOnly) ── returns the API's session token
+browser ──any later request──▶ Next server ──Authorization: Bearer <cookie>──▶ API
+```
+
+Why not the API's own cookie: `zara-inspired-ecommerce.vercel.app` and `zara-inspired-ecommerce-api.vercel.app` are *different sites* (`vercel.app` is on the Public Suffix List), so a cookie set by the API is third-party and Safari and Brave drop it. Bearer tokens have no such problem, and keeping the token server-side means no script on the page can read or exfiltrate it.
+
+```
+apps/web/
+├── lib/auth/cookie.ts      the cookie's name and flags (HttpOnly, SameSite=Lax, Secure in production, 30 days)
+├── lib/auth/client.ts      Better Auth client, server-only, bound to NEXT_PUBLIC_API_URL + /auth
+├── lib/auth/session.ts     getSession (cached per request), requireSession, authorizationHeader
+├── lib/auth/actions.ts     signInAction, signUpAction, signOutAction ("use server")
+├── components/account/     AuthForm, Field, SignOutButton
+├── app/login · /register · /account
+└── proxy.ts                sends visitors without the cookie from /account to /login
+```
+
+- **Sign in / register** are `<form action={serverAction}>` with `useActionState`, so they work before hydration. The action validates, calls the API, reads the session token from its `set-auth-token` header, writes the cookie with `cookies().set(...)`, and redirects (`?next=` is honoured only for same-site paths).
+- **Reading the session**: `await getSession()` in any server component — one API call per request, memoised with React `cache`. The root layout passes the user to the chrome, which is why `LOG IN` becomes `ACCOUNT` with no flicker. An unreachable API resolves to "signed out" rather than breaking the page.
+- **Protecting a page**: `const { user } = await requireSession("/account")` — it redirects to `/login?next=…` when there is no session. `proxy.ts` does the same check optimistically on the cookie's presence, to skip rendering; the page's own check is the one that matters.
+- **Calling protected API routes** from a server component: `fetch(url, { headers: await authorizationHeader() })`.
+- **Signing out** clears the session at the API and deletes the cookie, then redirects home.
+- **Origin**: Better Auth refuses state-changing calls whose `Origin` is missing or untrusted, so server-side calls send the origin the visitor is actually on. It has to be in the API's `FRONTEND_ORIGIN`, which is the check we want — a deployment that is not on that list cannot sign anyone in.
+- **Trade-off**: reading the cookie in the root layout makes every route render per request (the build marks them all `ƒ`). Catalogue data underneath is still cached (`revalidate: 300`), so this costs render time, not API calls.
+
+No new environment variables: the web app only needs `NEXT_PUBLIC_API_URL`.
+
 ## API
 
 Express 5 + Postgres, in `apps/api`. Development base URL: `http://localhost:4000`.
@@ -227,7 +260,7 @@ TOKEN=$(curl -sD - -o /dev/null -X POST $API/auth/sign-in/email -H 'content-type
 curl $API/me -H "Authorization: Bearer $TOKEN"
 ```
 
-**From the web app.** Use `createAuthClient` from `better-auth/react` with `baseURL: NEXT_PUBLIC_API_URL`, `basePath: "/auth"`, and the `bearer` client plugin (or pass `fetchOptions: { credentials: "include" }` on a same-site deployment); the client exposes `signUp.email`, `signIn.email`, `signOut`, and the `useSession` hook. Server components can call the API with the same bearer header.
+**From the web app.** The browser never calls these routes: the Next server does, and keeps the session in its own HttpOnly cookie. See [Accounts in the web app](#accounts-in-the-web-app).
 
 **Protecting a route.** Add `requireSession` before the handler (or `router.use(requireSession)` for a whole router) and read `req.session.user` / `req.session.session`; see `src/routes/me/me.routes.ts`. Anything that must check ownership (a bag, an order) compares against `req.session.user.id`.
 

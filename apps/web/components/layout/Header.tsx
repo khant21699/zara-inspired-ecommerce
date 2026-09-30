@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SideMenu } from "./SideMenu";
 import type { MenuRail } from "@/lib/api/products";
+import type { SessionUser } from "@/lib/auth/session";
 import { bagCount, useStore } from "@/lib/store";
 import { cn } from "@/lib/format";
 
@@ -14,7 +15,13 @@ import { cn } from "@/lib/format";
  * right edge) and content runs underneath. The wordmark appears only on the
  * home surface, oversized and fixed at the right.
  */
-export function Header({ menuRail }: { menuRail: MenuRail }) {
+export function Header({
+  menuRail,
+  user,
+}: {
+  menuRail: MenuRail;
+  user: SessionUser | null;
+}) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const { bag } = useStore();
@@ -83,10 +90,16 @@ export function Header({ menuRail }: { menuRail: MenuRail }) {
               {count}
             </span>
           </Link>
-          <Link href="/login" className="hidden h-8 items-center py-[5px] md:flex">
-            Log in
+          <Link
+            href={user ? "/account" : "/login"}
+            className="hidden h-8 items-center py-[5px] md:flex"
+          >
+            {user ? "Account" : "Log in"}
           </Link>
-          <Link href="/help" className="hidden h-8 items-center py-[5px] md:flex">
+          <Link
+            href="/help"
+            className="hidden h-8 items-center py-[5px] md:flex"
+          >
             Help
           </Link>
         </nav>
@@ -102,7 +115,12 @@ export function Header({ menuRail }: { menuRail: MenuRail }) {
         )}
       </header>
 
-      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} rail={menuRail} />
+      <SideMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        rail={menuRail}
+        user={user}
+      />
     </>
   );
 }

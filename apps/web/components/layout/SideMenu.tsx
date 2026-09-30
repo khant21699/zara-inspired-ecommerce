@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import type React from "react";
 import { MENU_LINKS, SECTIONS, isSectionSlug } from "@/lib/data/catalog";
 import type { MenuRail } from "@/lib/api/products";
+import type { SessionUser } from "@/lib/auth/session";
+import { SignOutButton } from "@/components/account/SignOutButton";
 import type { Category, Section, SectionSlug } from "@/lib/types";
 import { ProductArt } from "@/components/product/ProductArt";
 import { cn } from "@/lib/format";
@@ -15,6 +17,8 @@ interface Props {
   onClose: () => void;
   /** Image rail per section, fetched by the layout. */
   rail: MenuRail;
+  /** The signed-in user, or null. Decides what the account row says. */
+  user: SessionUser | null;
 }
 
 /*
@@ -80,7 +84,7 @@ function Pending({
   );
 }
 
-export function SideMenu({ open, onClose, rail: railBySection }: Props) {
+export function SideMenu({ open, onClose, rail: railBySection, user }: Props) {
   const pathname = usePathname();
   const currentSection = pathname.split("/")[1];
   const [tab, setTab] = useState<SectionSlug>(
@@ -193,11 +197,16 @@ export function SideMenu({ open, onClose, rail: railBySection }: Props) {
                       className="hover:text-ink"
                     >
                       <Pending pendingClassName="text-ink underline underline-offset-4">
-                        {l.name}
+                        {l.href === "/account" && !user ? "Log in" : l.name}
                       </Pending>
                     </Link>
                   </li>
                 ))}
+                {user && (
+                  <li>
+                    <SignOutButton variant="link" />
+                  </li>
+                )}
               </ul>
             </nav>
 

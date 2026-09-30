@@ -229,6 +229,13 @@ Refined and nearly silent: words for controls, hairlines for structure, inversio
 - **Line input** (`.input-line`): borderless, transparent, 1px ink bottom rule, 10px vertical padding, uppercase caption-grey placeholder, no outline. Text inherits the 11px/300 body.
 - **Focus:** chrome links draw a 1px `currentColor` outline offset 4px; the menu button rings its lines at 8px offset instead of its oversized hit area.
 
+### Account forms
+- **Shell:** a 360px column centred in the page column (`/login`, `/register`); `/account` runs at the column's left edge like any content page. The heading is 13px uppercase — the form is the page, so no display type is spent on it.
+- **Field:** an 11px caption-grey label over a full-width line input (12px), 32px between fields. An invalid field sets `aria-invalid` and prints its message beneath in 11px uppercase ink, tied to the input with `aria-describedby`.
+- **Form error** (a rejected sign-in, a taken e-mail): one 11px uppercase line with `role="alert"` above the button, separated by a full-width ink hairline.
+- **Submit:** the primary button at full width; while the action is in flight it is disabled, `aria-busy`, and its label takes the present participle (LOGGING IN…, CREATING ACCOUNT…, LOGGING OUT…). The alternative route (register / log in) follows in 11px caption grey with the link in ink.
+- **Account page:** a definition list on hairlines (11px caption-grey term, value right-aligned), then primary + secondary buttons side by side from 40rem, then the sections this project has not built as a hairline list with a caption-grey note on each. The menu's secondary list carries LOG OUT as a plain caption-grey word while a session exists.
+
 ### Navigation
 - **Chrome:** fixed, pointer-events off except on the instruments, 13px uppercase, 300ms colour transition. Words underline on hover (1px, 4px offset); SEARCH thickens its underline to 2px instead. Bag, log in, help are 32px rows with 5px vertical padding, right-aligned.
 - **Hamburger:** two 1px ink lines 15px apart in a 64×16px box (40px wide on phones); on open each line translates 7.5px and rotates 45° over 500ms ease-out-expo into an X, the only close control besides Escape.

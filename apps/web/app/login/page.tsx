@@ -1,31 +1,34 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/ui/ComingSoon";
+import { redirect } from "next/navigation";
+import { AuthForm } from "@/components/account/AuthForm";
+import { Page } from "@/components/ui/Page";
+import { signInAction } from "@/lib/auth/actions";
+import { getSession } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "Log in" };
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  const { next } = await searchParams;
+  const target =
+    typeof next === "string" && next.startsWith("/") ? next : "/account";
+  if (await getSession()) redirect(target);
+
   return (
-    <ComingSoon
-      title="Log in to your account"
-      description="Accounts need an authentication service. Log in, registration and password recovery will be enabled once the backend is connected."
-      preview={
-        <form className="space-y-8 text-left" aria-hidden>
-          <div>
-            <label className="text-2xs uppercase text-muted">E-mail</label>
-            <input disabled className="input-line" />
-          </div>
-          <div>
-            <label className="text-2xs uppercase text-muted">Password</label>
-            <input disabled type="password" className="input-line" />
-          </div>
-          <button type="button" disabled className="btn-primary w-full">
-            Log in
-          </button>
-          <button type="button" disabled className="btn-secondary w-full">
-            Register
-          </button>
-        </form>
-      }
-    />
+    <Page>
+      <div className="mx-auto max-w-[360px] pb-32">
+        <h1 className="text-chrome uppercase">Log in to your account</h1>
+        <AuthForm
+          action={signInAction}
+          next={target}
+          submit="Log in"
+          submitting="Logging in…"
+          alternative={{
+            lead: "No account yet?",
+            label: "Register",
+            href: "/register",
+          }}
+        />
+      </div>
+    </Page>
   );
 }
