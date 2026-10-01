@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
+import { getSession } from "@/lib/auth/session";
 import { fetchMenuRail } from "@/lib/api/products";
 import { SECTIONS } from "@/lib/data/catalog";
 import { Footer } from "@/components/layout/Footer";
@@ -39,11 +40,16 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const menuRail = await fetchMenuRail(SECTIONS);
+  // The session comes from the HttpOnly cookie, so every route renders per
+  // request; the catalogue fetches underneath stay cached (revalidate 300).
+  const [menuRail, session] = await Promise.all([
+    fetchMenuRail(SECTIONS),
+    getSession(),
+  ]);
   return (
     <html lang="en" className={`${wordmark.variable} ${sans.variable} h-full`}>
       <body className="flex min-h-full flex-col">
-        <Header menuRail={menuRail} />
+        <Header menuRail={menuRail} user={session?.user ?? null} />
         <main className="flex-1">{children}</main>
         <Footer />
         <CookieBanner />

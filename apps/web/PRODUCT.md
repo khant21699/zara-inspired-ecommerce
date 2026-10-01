@@ -76,6 +76,7 @@ Fidelity is the feature. This is not a generic e-commerce template or a "Zara-fl
 - **Help content:** 10 topics in `lib/data/help.ts`.
 - **Company and Join Life copy** (`/company` facts such as "1975", "200+ markets online", "2 weeks design to store", "52 collections a year"; the four Join Life pillars) is reference-brand narrative reproduced for fidelity. It describes the reference, not this project. Keep it as is; do not extend it into new claims, statistics, or commitments.
 - **Database:** a hosted Postgres `products` table with at least `id, name, price`. Contents not verified during this interview.
+- **Accounts:** real since 2026-09-28. Better Auth in the API (`/auth/*`, email + password, sessions in Postgres); the web app signs people in through its own server and keeps the API session token in a first-party HttpOnly cookie. `/login`, `/register` and `/account` are live; purchases, returns, addresses and payment methods on the account page are honestly labelled as not connected.
 - **Absent, never to be fabricated:** testimonials, customers, press, real orders, store locations, delivery or returns guarantees beyond the reference-style help copy already present.
 
 ## Product Principles
